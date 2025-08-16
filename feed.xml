@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://www.flowtoolz.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.flowtoolz.com/" rel="alternate" type="text/html" /><updated>2025-08-16T20:38:06+02:00</updated><id>https://www.flowtoolz.com/feed.xml</id><title type="html">Flowtoolz</title><subtitle>Beautiful &lt;nobr&gt;Creativity Tools&lt;/nobr&gt; for &lt;nobr&gt;Working in Flow&lt;/nobr&gt;&lt;br&gt;&lt;nobr&gt;Focus. Play. Create.&lt;/nobr&gt;</subtitle><author><name>Sebastian Fichtner</name></author><entry><title type="html">Goodbye Flowtoolz.com – Hello Codeface.io!</title><link href="https://www.flowtoolz.com/2022/09/13/new-codeface-io-website.html" rel="alternate" type="text/html" title="Goodbye Flowtoolz.com – Hello Codeface.io!" /><published>2022-09-13T00:00:00+02:00</published><updated>2022-09-13T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2022/09/13/new-codeface-io-website</id><content type="html" xml:base="https://www.flowtoolz.com/2022/09/13/new-codeface-io-website.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/codeface/poster.png" title="Goodbye Flowtoolz.com – Hello Codeface.io!" alt="Goodbye Flowtoolz.com – Hello Codeface.io!. Apple, Xcode, Swift, iOS, macOS, SwiftUI, app, software architecture, codeface, code" /></p>
+
+<p>With my new app <a href="https://codeface.io">Codeface</a>, I wanna make software development more fun and productive!</p>
+
+<p>Software architecture is typically implicit in thousands of lines of code and invisible – even to the people working on that code. Codeface can reveal that architecture to everyone, anchoring any reasoning or discussion about code in how that code is actually shaped at that moment.</p>
+
+<p>Codeface visualizes the architecture of a codebase, so users can explore its every scope at every level via interactive diagrams and directly see its quality indicated via meaningful metrics.</p>
+
+<p>Because Codeface leverages the Language Server Protocol, it can inspect code of virtually every language. I open-sourced <a href="https://github.com/codeface-io">all of the infrastructure</a>, most notably <a href="https://github.com/flowtoolz/SwiftNodes">SwiftNodes</a>, <a href="https://github.com/flowtoolz/LSPService">LSPService</a> and <a href="https://github.com/flowtoolz/SwiftLSP">SwiftLSP</a>.</p>
+
+<p>If you’re interested in collaborating on this in any form, feel free to write at <a href="mailto:hello@codeface.io">hello@codeface.io</a>.</p>
+
+<p>The “old” site here at flowtoolz.com will morph into a more personal one. Much of the content will re-appear refreshed at <a href="https://codeface.io">Codeface.io</a> or move there or vanish completely. This old blog stays but won’t see updates any time soon. I’ll publish potential new articles exclusively on <a href="https://codeface.io">the new site</a>. See you there!</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[Codeface.io is now becoming my main focus. It covers the new Codeface app as well as general software architecture and related consulting work.]]></summary></entry><entry><title type="html">30 Reasons Why I Avoid Xcode’s Interface Builder</title><link href="https://www.flowtoolz.com/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder.html" rel="alternate" type="text/html" title="30 Reasons Why I Avoid Xcode’s Interface Builder" /><published>2019-09-27T00:00:00+02:00</published><updated>2019-09-27T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder</id><content type="html" xml:base="https://www.flowtoolz.com/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/xcode-interface-builder/no-apple-xcode-interface-builder.png" title="30 Reasons Why I Avoid Xcode's Interface Builder" alt="30 Reasons Why I Avoid Xcode's Interface Builder. Apple, Xcode, interface builder, Swift, auto layout, uiview, uiviewcontroller, storyboard, xib, IBOutlet, iOS, macOS, SwiftUI, UIKit, AppKit, UI, user interface, design, programming, programmatic, mobile apps, software architecture" /></p>
+
+<p>The road to complexity hell is plastered with well intended technologies. And after I’ve had to deal with Apple Xcode’s Interface Builder in every big client project, I’m convinced its promises are an illusion.</p>
+
+<p>So why am I such a hater on the Interface Builder? What I rather wonder is: Why would any <strong>professional</strong> use it? While the IB <em>may</em> help to build simple rough prototypes (I’m not even sure about that), I can’t regard it anymore as an option for professional apps.</p>
+
+<h2 id="five-violated-principles">Five Violated Principles</h2>
+
+<p>This article ends on a list of 25 issues that I experienced with the Interface Builder across many projects. However, those issues are really just arbitrary symptoms of an underlying problem: The Interface Builder violates fundamental <a href="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html">principles of software architecture</a>. We could certainly find even more symptoms because going against basic principles manifests in countless unpredictable ways.</p>
+
+<p>So what principles would we violate using the IB? Here are five:</p>
+
+<ol>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Package_principles#Principles_of_package_cohesion">Principles of Cohesion</a>:</strong> We violate the principle of maximum cohesion as we spread the concern of a single view over two different artifacts. This divide goes through almost all screens and views in a typical commercial project, causing countless friction points.</p>
+
+    <p>The issue gets amplified by the fact that every one of those friction points must translate between two different representation standards: One is <a href="https://forums.swift.org">Swift</a>, the other is an IB specific XML format.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Acyclic_dependencies_principle">Acyclic Dependency Principle</a>:</strong> IB files reference UIView- and UIViewController subclasses which, in turn, reference IB files via outlets and name identifiers for XIBs, segues and storyboards.</p>
+
+    <p>While this is not good, it is mostly a consequence of violating the SRP.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">Dependency Inversion Principle</a>:</strong> Specifics depend on abstractions. Yet IB files entangle abstract screen flow and view descriptions with highly specific formats and tools. What is logically an independent “view model” technically becomes dependent onto system specifics.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">Effective artifacts tell the truth</a>:</strong> We could interpret all the above principles as aspects of this more fundamental assessment.</p>
+
+    <p>For example, the <a href="https://www.flowtoolz.com/2019/08/26/code-structure-is-determined-by-dependencies.html">dependencies</a> between Swift types and IB artifacts are not implied by the intended user interface. Nor do they follow from the required technology, considering that the IB’s abstractions are hardly a thin veneer over the respective UI framework (UIKit, AppKit). So those dependencies structure the project in a way that <em>is untrue to its supposed meaning</em>.</p>
+
+    <p>Also, user interfaces are hierarchically composed, so the project’s artifacts representing the UI should reflect that structure. IB files can indeed do that, yet they store everything in a format that is only transparent to the IB itself and opaque in all other contexts. This means, in many contexts (most notably with git), IB artifacts <em>don’t tell the truth about UI structure</em>.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Binomial_coefficient">Complexity increases quadratically</a>:</strong> The number of potential pairwise friction points between <code class="highlighter-rouge">N</code> moving parts is <code class="highlighter-rouge">(N^2 - N) / 2</code>. While 5 technologies can have 10 friction points, 6 technologies can already have 15:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/complexity-exploding-with-tech-factors.jpg" alt="storyboard_compilation_error" /></p>
+
+    <p>By nature, we think linearly, but complexity grows much faster, so we constantly underestimate it. We let technologies and dependencies creep in because each by itself is theoretically useful. Yet overall, they make the complexity of our system explode.</p>
+
+    <p>This principle is by no means limited to software systems, yet it is relevant here. We should be super reluctant to add unnecessary technologies to our tech stack, even if they promise to be worth it.</p>
+  </li>
+</ol>
+
+<h2 id="25-symptoms">25 Symptoms</h2>
+
+<p>So here is what you get, “building” UIs with Interface Builder:</p>
+
+<ol>
+  <li>
+    <p>Because you have to draw a line somewhere between visual editing and coding, and because many views can’t be represented in IB files (due to custom drawing, dynamic layouts, views from external frameworks, lazyness etc.), IB files <strong>virtually never</strong> provide an idea of how screens will actually look, which defeats much of the IB’s purpose.</p>
+
+    <p>In practice, most storyboards look something like this:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/storyboard.jpg" alt="storyboard_compilation_error" /></p>
+  </li>
+  <li>
+    <p>The IB is slow. Opening and loading a storyboard usually has a significant delay.</p>
+  </li>
+  <li>
+    <p>The IB does not make it obvious where configurations deviate from defaults, i.e. where they have been manipulated by a developer.</p>
+  </li>
+  <li>
+    <p>Handleing complex interfaces through pointing, zooming, scrolling and selecting, intertwined with keyboard input is actually pretty fucking slow.</p>
+  </li>
+  <li>
+    <p>Algorithmic (dynamic/generic) layouts are impossible. However, often the mere existence of a view is determined at runtime, or layouts depend on data.</p>
+  </li>
+  <li>
+    <p>What constraints are actually applied is less explicit, in particular in the context of the code.</p>
+  </li>
+  <li>
+    <p>IB files create a mess with collaboration and version control systems like git.</p>
+  </li>
+  <li>
+    <p>IB files mess up the architecture I: They entangle the logical definition of the interface (which constitutes something like a “view model”) with highly system specific file formats.</p>
+  </li>
+  <li>
+    <p>IB files mess up the architecture II: They entangle the logical definition of screen flow (high level navigation) with highly system specific file formats.</p>
+  </li>
+  <li>
+    <p>Setting very specific constraints with multipliers etc. and also debugging layout issues are a nightmare with the IB.</p>
+  </li>
+  <li>
+    <p>Coding animations often requires to access or even replace constraints. Good luck doing that when using the IB!</p>
+  </li>
+  <li>
+    <p>There are more initializers and functions like <code class="highlighter-rouge">prepare(for segue: ...)</code> to worry about as well as the general interoperation between code and IB files.</p>
+  </li>
+  <li>
+    <p>Communicating with views requires to create outlets, which is actually quite cumbersome.</p>
+  </li>
+  <li>
+    <p>Your app will be harder to port to other platforms, even within the Apple universe.</p>
+  </li>
+  <li>
+    <p>It is more cumbersome to turn views into reusable custom views when they live in IB files. This also leads to massive view controllers.</p>
+  </li>
+  <li>
+    <p>You’ll encounter a bunch of issues when trying to package IB files into frameworks and Cocoapods.</p>
+  </li>
+  <li>
+    <p>Subviews are optional. Either you unwrap them everytime or you make them implicitly unwrapped. The latter option is common practice but can (and did in client projects) lead to crashes.</p>
+  </li>
+  <li>
+    <p>It is impossible to pass parameters to custom designated initializers of your views and view controllers. This stark limitation can compromise clean design and architecture.</p>
+  </li>
+  <li>
+    <p>The Refactor-Rename function in Xcode will not always rename all outlet connections in IB files, leading to crashes. You’ll need to reconnect renamed outlets by hand.</p>
+  </li>
+  <li>
+    <p>You’ll deal with a whole new type of “compilation” error, which is also opaque and hard to debug:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/storyboard_compilation_error.png" alt="storyboard_compilation_error" /></p>
+  </li>
+  <li>Designing custom view classes through the IB is cumbersome and requires to use IB “designables”. Plus:
+    <ul>
+      <li>IB must recompile your whole project in order to display these designables, which makes the IB performance problems even worse.</li>
+      <li><code class="highlighter-rouge">@IB_Designable</code> is not well documented by Apple.</li>
+      <li><code class="highlighter-rouge">@IB_Designable</code> rendering causes its own type of build errors:</li>
+    </ul>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/ib_designable_rendering_error.png" alt="designable_rendering_error" /></p>
+  </li>
+  <li>
+    <p>IB will not recognize when you move a referenced class to another module (framework, cocoapod etc.). If you forget to adapt the module manually in IB, you’ll be surprised by chrashes.</p>
+  </li>
+  <li>
+    <p>It’s impossible to define insets, offsets, multipliers, sizes, colors, fonts etc. in one place as part of a style. Much less can you compute them dynamically, for instance to depend on screen size, device type or user preference.</p>
+  </li>
+  <li>
+    <p>Using the IB makes code harder to debug. For instance, setting a breakpoint in a view’s or view controller’s initializer won’t tell you what triggered the creation of that object. Also, you can’t search for a term like <code class="highlighter-rouge">MyView(</code> in your project to find all uses/clients of that view class.</p>
+  </li>
+  <li>Using the IB will make it harder to migrate to more modern code-based and declarative technologies like SwiftUI.</li>
+</ol>
+
+<h2 id="one-conclusion">One Conclusion</h2>
+
+<p>Looking at pinciple problems and some of their concrete symptoms, using the traditional Interface Builder should be considered insane – in particular in light of how easy programmatic layout with Swift has become, with <a href="https://developer.apple.com/documentation/uikit/nslayoutanchor">layout anchors</a>, <a href="https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide">safe areas</a>, frameworks like <a href="https://github.com/flowtoolz/GetLaid">GetLaid</a> and, of course, <a href="https://developer.apple.com/documentation/swiftui/">SwiftUI</a>.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[The road to complexity hell is plastered with well intended technologies. And so the promises of the Interface Builder are an illusion.]]></summary></entry><entry><title type="html">Dependencies Determine Structural Architecture</title><link href="https://www.flowtoolz.com/2019/08/26/code-structure-is-determined-by-dependencies.html" rel="alternate" type="text/html" title="Dependencies Determine Structural Architecture" /><published>2019-08-26T00:00:00+02:00</published><updated>2019-08-26T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2019/08/26/code-structure-is-determined-by-dependencies</id><content type="html" xml:base="https://www.flowtoolz.com/2019/08/26/code-structure-is-determined-by-dependencies.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/zen-stack.jpg" title="Dependencies Determine Structural Architecture" alt="Dependencies Determine Structural Architecture. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy, dependence, object-oriented design" /></p>
+
+<p>This is the second and last “axiomatic” discussion. The texts follwing this one will build more upon already introduced ideas and ultimately tie them all together.</p>
+
+<h2 id="structure-sets-the-stage">Structure Sets the Stage</h2>
+
+<p>The natural laws of life relate to its structure. The structure of a thing is defined by its <em>elements</em> and the <em>relationships</em> between them. The elements of life are atoms, organic compounds, peptides, lipids, RNA, DNA, amino acids and so forth. And how they relate to each other obviously makes all the difference.</p>
+
+<p>The <a href="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html">natural laws of code</a> also relate to structure. So what are the elements and relationships in code?</p>
+
+<p><a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">Previously</a>, we explored the way code conveys meaning. Here, we examine the way it is structured. To that purpose, we’re gonna put <a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">tech- and value environment</a> aside and focus instead on the actual raw source code, its organizational units and circuitry.</p>
+
+<p>And who cares about code structure? Code is never the issue anyway, it’s just those annoying people who want us to change the code all the time, right?</p>
+
+<p>Requirements and technologies are in flux. For a code base to survive, it must adapt to an ever changing <a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">environment</a>:</p>
+
+<p><img src="/blog-images/software-development/architecture/code-adapts-to-environment.jpg" alt="" /></p>
+
+<p>In the evolution of organisms and code, flexibility is resilience and rigidity is death. And that’s why structure is the central issue of such complex yet evolving systems.</p>
+
+<p>Software is supposed to be soft. We rather have incorrect code that we can change easily than correct code that noone dares to touch anymore. How code is structured determines whether it meets the most essential requirement, which is <em>maintainability</em>, the ability to be changed. Without changes in software, there is no <em>software development</em>.</p>
+
+<h2 id="artifacts">Artifacts</h2>
+
+<p>When we structure source code, we often think about classes and similar namespaces. And there are many more types of organizational units, at many more scales: project, application, layer, micro service, module, framework, library, package, source file, type, interface, nested type, function, property, statement, variable and more.</p>
+
+<p>Depending on context, those structural elements may widely differ in size, usage and exact technical definition. But for the purpose of this analysis, we regard them as <em>code artifacts</em>, pieces of code that are structurally distinct, irrespective of what they mean.</p>
+
+<p>A code artifact is hierarchically composed of other smaller artifacts that we might call its <em>parts</em>. An artifact constitutes the <em>scope</em> of its parts:</p>
+
+<p><img src="/blog-images/software-development/architecture/code-artifact-hierarchy-no-dependence.jpg" alt="" /></p>
+
+<p>Aside from this scope-part relationship, code artifacts also relate to each other in more interesting ways. Think of a class that derives from an interface, or of a struct that calls a remote micro service:</p>
+
+<p><img src="/blog-images/software-development/architecture/code-artifact-hierarchy.jpg" alt="" /></p>
+
+<p>All these relationships define the structure of code and are the focus of architectural principles.</p>
+
+<h2 id="dependence">Dependence</h2>
+
+<p>We tend to associate software architecture with principles and patterns of object-oriented design. At an abstract level, all those principles, like the <a href="https://en.wikipedia.org/wiki/Acyclic_dependencies_principle">ADP</a>, and patterns, like <a href="https://en.wikipedia.org/wiki/Model–view–controller">Model-View-Controller</a>, are defined in terms of dependence. That’s because when code artifacts <em>relate</em> to another, they <em>depend</em> on another. To structure code is to manage dependencies.</p>
+
+<p>In his landmark publication “Design Principles and Design Patterns”, Robert C. Martin states:</p>
+
+<blockquote>
+  <p>“What kind of changes cause designs to rot? Changes that introduce new and unplanned for dependencies. Each of the four symptoms mentioned above is either directly, or indirectly caused by improper dependencies between the modules of the software. It is the dependency architecture that is degrading, and with it the ability of the software to be maintained.”</p>
+</blockquote>
+
+<p>As <a href="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html">mentioned earlier</a>, Martin’s ideas on architecture apply not only to “modules”. We may read “modules” as “code artifacts” to really grasp the universal force of dependence. And to meditate on this force should be the first step of any trip into the heights and depths of kick-ass coding.</p>
+
+<h3 id="explicit-dependence">Explicit Dependence</h3>
+
+<p>Now how exactly does one code artifact depend on another? The two types of <em>explicit dependence</em> are easy to identify:</p>
+
+<ol>
+  <li>
+    <p><strong>Nesting:</strong> If <code class="highlighter-rouge">B</code> is nested inside of <code class="highlighter-rouge">A</code> and so is an inherent part of <code class="highlighter-rouge">A</code>, then <code class="highlighter-rouge">A</code> explicitly depends on <code class="highlighter-rouge">B</code>:</p>
+
+    <p><img src="/blog-images/software-development/architecture/b-is-part-of-a.jpg" alt="" /></p>
+  </li>
+  <li>
+    <p><strong>Calling:</strong> If <code class="highlighter-rouge">A</code> directly refers to <code class="highlighter-rouge">B</code> or any of <code class="highlighter-rouge">B</code>’s interface in any form, then <code class="highlighter-rouge">A</code> explicitly depends on <code class="highlighter-rouge">B</code>:</p>
+
+    <p><img src="/blog-images/software-development/architecture/a-depends-on-b.jpg" alt="" /></p>
+  </li>
+</ol>
+
+<p>If <code class="highlighter-rouge">A</code> and <code class="highlighter-rouge">B</code> are actually compiled together, dependence by explicit reference (calling) can also be defined like so: If we could change <code class="highlighter-rouge">B</code> in a way that would require a change of <code class="highlighter-rouge">A</code> for both to compile again, then <code class="highlighter-rouge">A</code> explicitly depends on <code class="highlighter-rouge">B</code>.</p>
+
+<h3 id="implicit-dependence">Implicit Dependence</h3>
+
+<p>A given set of dependencies can imply that an artifact effectively, although indirectly, has another dependency, which would amount to an <em>implicit dependency</em>. There are two types of <em>implicit dependence</em>:</p>
+
+<ol>
+  <li>
+    <p><strong>Transitivity:</strong> If <code class="highlighter-rouge">A</code> depends on <code class="highlighter-rouge">B</code> and <code class="highlighter-rouge">B</code> depends on <code class="highlighter-rouge">C</code>, then <code class="highlighter-rouge">A</code> implicitly depends on <code class="highlighter-rouge">C</code>:</p>
+
+    <p><img src="/blog-images/software-development/architecture/transitive-dependency.jpg" alt="" /></p>
+  </li>
+  <li>
+    <p><strong>Bundling:</strong> If <code class="highlighter-rouge">A</code> depends on a part <code class="highlighter-rouge">B</code> of <code class="highlighter-rouge">C</code> while <code class="highlighter-rouge">A</code> itself is not part of <code class="highlighter-rouge">C</code>, then <code class="highlighter-rouge">A</code> implicitly depends on <code class="highlighter-rouge">C</code>:</p>
+
+    <p><img src="/blog-images/software-development/architecture/dependency-bundling.jpg" alt="" /></p>
+  </li>
+</ol>
+
+<p>Bundling refers to how a code artifact <code class="highlighter-rouge">C</code> generalizes its parts in terms of incoming dependencies. This only occurs because such dependencies cross the artifact’s boundary. Since <code class="highlighter-rouge">A</code> is outside of <code class="highlighter-rouge">C</code> it has to know about <code class="highlighter-rouge">C</code> or at least require the presence of <code class="highlighter-rouge">C</code> in order to depend on any part <code class="highlighter-rouge">B</code> inside of <code class="highlighter-rouge">C</code>. Would <code class="highlighter-rouge">A</code> itself be a part of <code class="highlighter-rouge">C</code>, it could depend on any other such part, totally ignorant of the all-encompassing scope <code class="highlighter-rouge">C</code>:</p>
+
+<p><img src="/blog-images/software-development/architecture/no-dependence-onto-scope.jpg" alt="" /></p>
+
+<p>Dependency bundling may sound academic but it effects practice. Think of how a source file <code class="highlighter-rouge">A</code> uses a type <code class="highlighter-rouge">B</code> declared within another file <code class="highlighter-rouge">C</code>. In most programming languages, <code class="highlighter-rouge">A</code> would have <strong>no explicit</strong> <a href="https://en.wikipedia.org/wiki/Include_directive">import/include/require statement</a> for <code class="highlighter-rouge">C</code> and would thereby <strong>implicitly</strong> depend on <code class="highlighter-rouge">C</code>. Few languages like C/C++, PHP and HTML/CSS make dependencies between source files explicit.</p>
+
+<p>Implicit dependence is less direct but structurally and logically just as relevant. We better not fool ourselves in thinking that techniques like <a href="https://en.wikipedia.org/wiki/Layer_(object-oriented_design)">layering</a>, <a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulation</a>, <a href="https://en.wikipedia.org/wiki/Information_hiding">information hiding</a> or the <a href="https://en.wikipedia.org/wiki/Facade_pattern">facade pattern</a> would equal true <a href="https://en.wikipedia.org/wiki/Loose_coupling"><em>decoupling</em></a>. Indirection does not alter the effective dependency structure and has a comparatively cosmetic effect.</p>
+
+<p>We can now describe code structure precisely as a number of hierarchically composed artifacts that depend on another. And we’ll sometimes refer to that structure as <em>architecture</em>.</p>
+
+<h2 id="dependency-hell">Dependency Hell</h2>
+
+<p>The listed dependency types allow for some wild conclusions.</p>
+
+<p>First of all, note that the parts of an artifact do not automatically depend on that artifact. In other words, an artifact does not <em>implicitly</em> depend on its enclosing scope. It is however possible that an artifact <em>explicitly</em> depends on its scope, in which case nesting creates a dependence cycle between the two:</p>
+
+<p><img src="/blog-images/software-development/architecture/explicit-dependence-onto-scope.jpg" alt="" /></p>
+
+<p>Nesting and transitivity imply that if <code class="highlighter-rouge">A</code> depends on <code class="highlighter-rouge">B</code>, then <code class="highlighter-rouge">A</code> depends on all parts of <code class="highlighter-rouge">B</code>:</p>
+
+<p><img src="/blog-images/software-development/architecture/transitive-dependency-on-a-part.jpg" alt="" /></p>
+
+<p>Bundling, nesting and transitivity together imply that if <code class="highlighter-rouge">A</code> depends on one part <code class="highlighter-rouge">B</code> of <code class="highlighter-rouge">C</code>, then it implicitly also depends on all other parts <code class="highlighter-rouge">D</code> of <code class="highlighter-rouge">C</code>:</p>
+
+<p><img src="/blog-images/software-development/architecture/transitive-dependency-on-all-other-parts.jpg" alt="" /></p>
+
+<p>And if just one of those other parts has an external dependency <code class="highlighter-rouge">E</code>, then every client <code class="highlighter-rouge">A</code> of <code class="highlighter-rouge">C</code> depends on <code class="highlighter-rouge">E</code> as well, even if <code class="highlighter-rouge">A</code> is not particularly interested in <code class="highlighter-rouge">E</code> and even if the <code class="highlighter-rouge">B</code> it is interested in doesn’t require anything from <code class="highlighter-rouge">E</code> either:</p>
+
+<p><img src="/blog-images/software-development/architecture/dependency-hell.jpg" alt="" /></p>
+
+<p>So a code artifact <code class="highlighter-rouge">C</code> bundles the outgoing dependencies of its parts as well as the incoming ones. And that’s how the four dependency types of the apocalypse together create <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a>.</p>
+
+<p>Mere code structure can be complex enough. On top of that, it is easy to confuse with two related but different perspectives:</p>
+
+<ol>
+  <li>A concrete but arbitrary instance of code at <a href="https://en.wikipedia.org/wiki/Run_time_(program_lifecycle_phase)">runtime</a>.</li>
+  <li>The abstract <a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">meaning of code</a>, whose structure can be different.</li>
+</ol>
+
+<p>These confusions particularly arise when we draw architecture diagrams, borrowing visual elements from <a href="https://en.wikipedia.org/wiki/Unified_Modeling_Language">UML</a>. So let’s have a closer look at them.</p>
+
+<h2 id="code-structure-is-not-about-runtime">Code Structure is Not About Runtime</h2>
+
+<p>When we slip into thinking about runtime, we contaminate architectural reasoning and diagrams with relationships other than structural dependence, in particular with runtime reference and information flow.</p>
+
+<h3 id="dependence-vs-runtime-reference">Dependence vs. Runtime Reference</h3>
+
+<p>Architecture identifies and relates <em>code artifacts</em> rather than <em>runtime instances</em>. The latter are basically memory areas that applications allocate at runtime. They could be objects, which are instances of classes, or even processes, which are instances of their respective program code. Runtime instances can reference each other through memory address pointers, URLs and other mechanisms.</p>
+
+<p>A runtime situation can be interesting but is only loosely related to code structure. To mix both perspectives is surprisingly tempting, so their distinction gets clouded in casual conversations and sloppy sketches, but it is profound in reality. Combining structural dependence and instance reference in the same diagram would make that diagram meaningless.</p>
+
+<p>Note, that patterns of object-oriented design are defined in terms of classes, not objects. Here is a <a href="https://en.wikipedia.org/wiki/Class_diagram">class diagram</a> and one of many possible corresponding <a href="https://en.wikipedia.org/wiki/Object_diagram">object diagrams</a>:</p>
+
+<p><img src="/blog-images/software-development/architecture/classes-vs-objects.jpg" alt="" /></p>
+
+<p>Runtime reference doesn’t even imply type dependence. Because of polymorphism, protocols and related techniques, instance <code class="highlighter-rouge">a</code> of type <code class="highlighter-rouge">A</code> can come to reference instance <code class="highlighter-rouge">b</code> of type <code class="highlighter-rouge">B</code> without <code class="highlighter-rouge">A</code> depending on <code class="highlighter-rouge">B</code>. Think, for example, of the delegate pattern.</p>
+
+<p>Also, there can be multiple runtime instances of the same code artifact. In the above diagrams, <code class="highlighter-rouge">b</code> and <code class="highlighter-rouge">b2</code> are both supposed to be instances of <code class="highlighter-rouge">B</code>.</p>
+
+<h3 id="dependence-vs-information-flow">Dependence vs. Information Flow</h3>
+
+<p><em>Information flow</em> unfolds at runtime and is typically implicit in a sequence of runtime instances interacting with another. <a href="https://en.wikipedia.org/wiki/Sequence_diagram">UML sequence diagrams</a> are a corresponding visual language:</p>
+
+<p><img src="/blog-images/software-development/architecture/sequence-diagram.jpg" alt="" /></p>
+
+<p>The instance that initiates the interaction must have a reference to the other. However, one reference alone (in the “direction of control”) is already enough to let information flow both ways. So, information flow per se tells us very little about reference direction.</p>
+
+<p>Now, the real havoc sets in when we draw information flow into architecture diagrams where it isn’t even an applicable concept. After all, information flows between runtime instances, not between code artifacts.</p>
+
+<p>When the distinction wasn’t as clear to me yet, I sometimes began to mark information flow in structure diagrams. Sooner or later, I got stuck because I undermined the meaningfulness of those diagrams, ultimately rendering them useless. When we conflate different levels of analysis in the same representation, we’re not thinking clearly.</p>
+
+<h2 id="code-structure-is-not-about-meaning">Code Structure is Not About Meaning</h2>
+
+<h3 id="uml-class-diagrams">UML Class Diagrams</h3>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Class_diagram">UML class diagram</a> is a widely known modelling language that’s supposed to convey the meaning rather than the structure of code. Because there’s also an implicit assumption that meaning is more or less congruent with structure, and because our structure diagrams look like simplified UML class diagrams, it is worth clarifying the difference.</p>
+
+<p>Above all, the semantics of how artifacts relate is utterly irrelevant to structural dependence itself. Whether class <code class="highlighter-rouge">A</code> calls a function of class <code class="highlighter-rouge">B</code>, has a property of type <code class="highlighter-rouge">B</code>, is intrinsically composed of properties of type <code class="highlighter-rouge">B</code> or derives itself from <code class="highlighter-rouge">B</code> doesn’t alter the fact that <code class="highlighter-rouge">A</code> <em>depends</em> on <code class="highlighter-rouge">B</code>. In terms of UML class diagrams, arrows signify dependence but the arrow types are irrelevant for that matter:</p>
+
+<p><img src="/blog-images/software-development/architecture/uml-arrows.jpg" alt="" /></p>
+
+<p>Also, composition in a UML class diagram describes how two concepts (from tech- or value environment) relate to another, stating that a composite consists of a component while the component cannot exist alone outside the composite. That description can be meaningful, but it tells us very little about how the actual code artifacts relate:</p>
+
+<p><img src="/blog-images/software-development/architecture/uml-class-diagram-vs-structure.jpg" alt="" /></p>
+
+<p><code class="highlighter-rouge">A</code> must depend on <code class="highlighter-rouge">B</code>, but does it just reference <code class="highlighter-rouge">B</code> or is it the scope of its part <code class="highlighter-rouge">B</code>? Conceptual and structural composition are similar but orthogonal features. We can have each without the other.</p>
+
+<p>UML offers countless variants of diagrams and all of them have their place. Just note that we don’t use UML unless explicitly stated. We just borrow some of its visual elements, like we use the inheritance arrow to mark an explicit dependence more specifically as a type inheritence or interface/protocol conformance:</p>
+
+<p><img src="/blog-images/software-development/architecture/dependency-by-inheritance.jpg" alt="" /></p>
+
+<h3 id="untrue-code">Untrue Code</h3>
+
+<p>The confusion between structure and meaning goes beyond UML.</p>
+
+<p>Imagine having multiple button classes in a codebase. Now the designer decides that Ok buttons ought to be green, so the developer goes and sets the color in all button classes that use the title “Ok”:</p>
+
+<p><img src="/blog-images/software-development/architecture/buttons-with-false-dependency.jpg" alt="" /></p>
+
+<p>Doesn’t that introduce dependencies between those classes? After all, if we now change one Ok button’s color, we’d have to adjust all other Ok buttons.</p>
+
+<p>What if the designer would suddenly declare that all buttons are actually unique and <em>could</em> have different colors? Now the green button colors would stop being dependencies. How can a dependency in code fluctuate with the mood of the designer?</p>
+
+<p>This is not real dependence. None of the button classes reference or contain another. Whether we “must” change the other buttons when we change one of them depends entirely on our idea of the design and, thereby, on the <a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">value environment</a>. So is an Ok button or at least an Ok button color a real concept or not?</p>
+
+<p>The problem of having to adjust all the button colors arises when we think the concept of an Ok button color exists while we don’t express it in code, which means we’re lying. Would the concept exist in code as well, there would be only one place to change it:</p>
+
+<p><img src="/blog-images/software-development/architecture/buttons-depending-on-color.jpg" alt="" /></p>
+
+<p>Producing untrue code is not the same as introducing dependencies. It relates to architecture in so far as it violates the principle that <a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">code expresses value- and tech environment</a> and that effective code would rather tell the truth. This provides a glimpse of how meaning should determine structure, and we’ll tie those two ideas together in our next discussion.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[In part 4 of this series, we show how dependencies between hierarchically composed artifacts make up the structure of source code.]]></summary></entry><entry><title type="html">Code Represents Customer Value and Technology</title><link href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html" rel="alternate" type="text/html" title="Code Represents Customer Value and Technology" /><published>2019-08-25T00:00:00+02:00</published><updated>2019-08-25T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology</id><content type="html" xml:base="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/customer-value-before-technology.jpeg" title="Code Represents Customer Value and Technology" alt="Code Represents Customer Value and Technology. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy, dependence, object-oriented design" /></p>
+
+<p>If <em>software architecture</em> roots in a set of laws that naturally apply to all code, then what are these laws? Let’s narrow down the first one! In this text, we excavate the fundamental role of <em>software architecture</em> by digging into the essence of code.</p>
+
+<p>Note, that when we talk of users, designers, developers and so forth, we mean abstract view points, not job descriptions or actual people. Could be that one person plays all the roles, could be that a view point is held by an institution or certain demographic. The possible concretions don’t matter here.</p>
+
+<h2 id="value-environment-and-tech-environment">Value Environment and Tech Environment</h2>
+
+<p>To uncover the nature of code, let’s approach it from a beginner’s mind, let’s pretend we know nothing about software. What does it do? How does it fit into the whole picture?</p>
+
+<p>At least, we can say this much: Software runs on concrete hardware to help people achieve abstract goals.</p>
+
+<p><img src="/blog-images/software-development/architecture/software-hardware-people.jpg" alt="" /></p>
+
+<p>Putting abstractions (and wishful thinking) aside, we may also notice that software interacts with the real world exclusively through hardware. From the perspective of code, there is no “user interaction”, there are just a bunch of devices like touch screen, hard drive and WiFi which translate information between code and the tangible world. While people might feel like they directly interact with an interesting domain, they technically only ever interact with hardware.</p>
+
+<p>To meet people’s needs and expectations (and wishful thinking), we build software upon many shared ideas, from language and common sense over our mental model of the application domain to the specific use cases and design of the envisioned product. Whether we make such ideas explicit in code or not, they are innate to any software that provides value.</p>
+
+<p><strong>There is no escape from this duality. Every piece of code on the planet stands with one foot in a technical- and with the other in an ideational environment.</strong></p>
+
+<p>The two environments are clearly distinct in the sense that the machine on which code runs is hardly ever what the code is about. Or put another way: We can always distinguish the value software generates for the user from the headache it generates for the developer.</p>
+
+<h3 id="value-environment">Value Environment</h3>
+
+<p><strong>The ideational environment of code are all concepts needed to describe the <em>value</em> we want people to get out of the product. It also reflects what ideas and conventions people generally <em>value</em>. So let’s call it the <em>value environment</em>.</strong></p>
+
+<p>More specifically, the value environment implies a complete description of the product from the user’s perspective, including a detailed idea of the product’s philosophy, application domain, use cases and design.</p>
+
+<h3 id="tech-environment">Tech Environment</h3>
+
+<p><strong>The <em>tech environment</em> of code are all pre-existing <a href="https://en.wikipedia.org/wiki/Application_programming_interface">APIs</a> the code can directly talk to. Mainly, that’s the programming language itself as well as frameworks provided by the system vendor and by 3rd parties.</strong> Note how this differs from a developer’s <a href="https://stackshare.io/stacks">tech stack</a>.</p>
+
+<p>The pupose of most software frameworks is communication with hardware, and we can understand much of the tech environment as a hardware representation.</p>
+
+<p>It should be clear that we can’t consider software frameworks as <em>defining</em> the architecture, let alone as <em>being</em> it. There is no such thing as an “architectural software framework”. No tool has the power to dictate the structure of what we build.</p>
+
+<p>We’re interested in a thought framework not in technical frameworks. Our question is how to think about the architecture of a whole project, not how to subject it to the patterns of one external dependency.</p>
+
+<h2 id="effective-code-tells-the-truth">Effective Code Tells the Truth</h2>
+
+<p><strong>Value- and tech environment may hold some difficult or implicit concepts that are hard to model, but they hold <em>all</em> the concepts our code represents. We never need to “invent” anything.</strong> Inventions wouldn’t correspond to anything in the environments, so they would neither contribute customer value nor help in dealing with the technology. They would only add useless complexity.</p>
+
+<p><strong>Code has exactly two sources of truth: its value- and its tech environment. They are its <em>meaning</em>. Code is <em>meaningful</em> when it reflects the reality of their concerns, structure and mechanics, no matter at what level of detail.</strong></p>
+
+<p>The two environments are very real - abstract maybe, but neither arbitrary nor virtual. And the “real world” can be a capricious chimera. Code is under this constant pressure to adapt because it mediates between two changing realities.</p>
+
+<p>Luckily, reality doesn’t evolve through arbitrary glitches. At least, I’d like to believe mine doesn’t. Instead, it’s bound by inherent laws. Some aspects of the world change easily, while other changes require lots of energy, are unlikely or simply impossible.</p>
+
+<p>This partial continuity and predictability of the world equally applies to the code representing that world. That’s why we intuitively understand how impactful a change request is. In other words: We know its meaning.</p>
+
+<p><strong>When code already corresponds well to reality, the effort that’s required to adopt a real-world change in code matches our intuitive expectation. To put it simply: With meaningful code, a “small” feature is quick to implement.</strong>  That’s not to say code should map all details of the world, but whatever aspects it needs to represent it must represent <strong>truthfully</strong>.</p>
+
+<p>The reverse also applies: When things change and our code can’t keep up as expected, it means some part of it is foul. Some part is at odds with the truth.</p>
+
+<p>To see things as they are and then paint an accurate picture is more than some heuristic for how to write resilient code because it matches what code really does. <strong>Code expresses ideational and technical concepts. And effective code tells the truth.</strong></p>
+
+<p>This axiomatic realization is almost banal. But it pays to deepen our awareness of it because, in practice, we’re often tempted to fabricate merely convenient concepts instead of making an effort to uncover the true inherent concepts of value- and tech environment.</p>
+
+<p>Writing code is to speak in a programming language. So, above all, let’s not lie. Lies make bad karma. Let’s just tell the truth and effectiveness will follow.</p>
+
+<!-- ... More Examples to Make All this More Concrete ... -->
+
+<!-- todo: examples of easy and hard changes in reality and how they map to developer expectations in an app in that domain -->
+
+<!-- This could mean, for instance, the necessary general frameworks are not available and application-agnostic functionality must be implemented, which is not part of our mental model of the application's reality. We intuitively assume that what is common across applications would pre-exist. And we'd be right to assume that because it should be part of the tech environment. -->
+
+<!-- Sometimes, the foul parts are beyond the control of developers, like when platform frameworks are designed in unfathomable ways. On the other hand: If the changing part of reality, like a functional requirement, doesn't intrinsically depend on any framework, then the corresponding code shouldn't depend on any framework either, otherwise that code wouldn't be true to the requirement's reality. -->
+
+<h2 id="effective-code-roots-in-precise-names">Effective Code Roots in Precise Names</h2>
+
+<blockquote>
+  <p>“In the Beginning Was the Word”</p>
+
+  <p>– Gospel of John</p>
+</blockquote>
+
+<p>Code shall tell the truth, but how can it tell us anything at all? Let’s talk about naming.</p>
+
+<p>We might think naming code artifacts is somewhat important because names help everyone understand what the hell the code does. And while that is true, the process of naming things has far greater significance.</p>
+
+<p>The expressiveness of code relies entirely on names. Even its structure would be meaningless if the structural elements were anonymous. All we have to attach meaning to code is the shared language we employ in its names.</p>
+
+<blockquote>
+  <p>“There are only two hard things in Computer Science: cache invalidation and naming things.”</p>
+
+  <p>– Phil Karlton</p>
+</blockquote>
+
+<p>This might be the most well known quote in all IT. So naming is not just crucial but also hard. Why?</p>
+
+<p>To name a code artifact, we have to think about what it actually means. What is the role of this variable, function, enumeration, interface, class, file, module or micro service? What does it represent?</p>
+
+<p>When an artifact’s intrinsic name isn’t obvious, it likely doesn’t correspond to anything real yet, at least not to only one thing. Either we haven’t precisely mapped the involved ideas and technicalities to code or we haven’t even understood them properly.</p>
+
+<p>Naming is difficult because it is a bi-directional process. By figuring out how to name our code artifacts we also figure out what code artifacts we should have to begin with. We articulate but also investigate value- and tech environment, constantly answering two intricate questions:</p>
+
+<ol>
+  <li>What is it <em>really</em> that we try to build?<br />(What is the value environment?)</li>
+  <li>How do these frameworks and devices <em>really</em> work?<br />(What is the tech environment?)</li>
+</ol>
+
+<h2 id="the-value-environment-is-paramount">The Value Environment Is Paramount</h2>
+
+<p>You likely saw this coming from a mile away: Although value- and tech environment are clearly distinct ideas that we could easily spin as some sort of profound dualism, they have no parity at this grand level of analysis. <strong>Value- and tech environment are not true equals. What software does for the user is more important than what it requires from the developer.</strong></p>
+
+<p>We don’t make software because a bunch of developers are bored to death, but because a bunch of users love it. So there are levels to this: <strong><em>How</em> we build a software poduct depends on <em>what</em> exactly we build which depends on <em>why</em> we build it. While the developer has the <em>know how</em> (the technical environment), the user has the <em>know why</em> (the value environment).</strong></p>
+
+<p>You might think: “But users rarely know why they value one thing over another, and they certainly don’t make every design decision, that’s why we have excellent product owners and UX designers.” All that is true. However, we’re targeting a deeper truth. Although users might not consciously know them, the reasons for why they love or hate software are ultimately their own. Also remember, that “users” refers to an abstract viewpoint.</p>
+
+<p><strong>When we design software, we aim to accommodate what users feel, believe and value. That means we anticipate a value environment. The technical environment then follows our design as in “form follows function”. Therefore, the value environment is paramount.</strong> Fear not, we’re not trying to resurrect the waterfall model here, we only depict logical dependence and importance, not sequence.</p>
+
+<p>To bring this back to earth: The reason Instagram has mobile phones as a basic tech environment is not that the respective developers are tired of JavaScript. Instagram runs on mobile phones because people documenting their lifes is a pretty mobile use case.</p>
+
+<p>So we can make two assessments of the nature of code:</p>
+
+<ol>
+  <li>Code represents the value it generates as well as the technology to which it adapts.</li>
+  <li>The value it generates is the ultimate purpose of code, so technology is secondary.</li>
+</ol>
+
+<p>This result took only a subtle (almost self-evident) step in terms of analysis, yet it allows for a leap in terms of practical implications. If we truly let the fact sink in that code represents <em>real</em> concepts, and if our thinking truly is “customer centric”, then many daily questions in the trenches of code production answer themselves, from naming and ordering over optimization and organization to high-level architecture.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[In part 3 of this series, we show how the meaning of code roots first in its ideational- and second in its technical environment.]]></summary></entry><entry><title type="html">Architecture is Principled Software Development</title><link href="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html" rel="alternate" type="text/html" title="Architecture is Principled Software Development" /><published>2019-08-24T00:00:00+02:00</published><updated>2019-08-24T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development</id><content type="html" xml:base="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/dharma-wheel.jpeg" title="Architecture is Principled Software Development" alt="Architecture is Principled Software Development. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy, dependence, object-oriented design" /></p>
+
+<h2 id="is-architecture-for-buildings">Is Architecture for Buildings?</h2>
+
+<p><em>Software architecture</em> is a fuzzy term and we’ll deconstruct it anyway, so let’s not get bogged down by “definitions”. Instead, let’s build upon our intuitive understanding and address common misconceptions.</p>
+
+<p>In the realm of software, architecture is, first and foremost, a metaphor. It’s a useful one. But, like with any metaphor, you can take it to a point where it breaks down. Its applicability is limited and depends on what aspects we want to illuminate.</p>
+
+<p>One aspect in which the metaphor fails software is this: Real world construction requires <a href="https://en.wikipedia.org/wiki/Big_Design_Up_Front">up front design</a> while software can evolve organically. The software architect can quickly build a working product and then iterate over it again and again. It’s like starting with a small hut, with no windows, plumbing or electricity, and then growing that hut, step by step, into a futuristic complex.</p>
+
+<p><img src="/blog-images/software-development/architecture/construction-vs-iteration.jpg" alt="" /></p>
+
+<p>Another mismatch worth remembering is that architecture of buildings involves the aesthetics they present to the end customer. In that sense, it is artistic and subjective. What interests us about software architecture is neither artistic nor subjective.</p>
+
+<p>In some aspects, the metaphor is valid: Architecture relates to the structure of the end product. It’s supposed to meet functional and non-functional requirements. And it must accord with natural laws.</p>
+
+<p>For buildings, those natural laws are the laws of physics. For software, noone has really articulated them. Common patterns and principles suggest that there are some fundamental insights buried within our best practices. It seems we’re already half-conscious of the laws of code. Throughout this book, we’ll attempt to excavate them.</p>
+
+<h2 id="architecture-pattern-recognition">Architecture Pattern Recognition</h2>
+
+<p><strong>“Architectural” patterns and principles are supposed to paint the big picture. And while that zoomed out perspective is wide in scope, it is often shallow conceptually.</strong> We want a deeper level of analysis because, as they say, you can’t solve a problem at the same level at which it occurs.</p>
+
+<p>In daily practice, we feel we have an intuition of what “clean” design, proper “engineering” and “elegant” solutions would look like. But <strong>what we think is optimal or what feels beautiful isn’t necessarily that by the intrinsic standards and true nature of the subject matter</strong>.</p>
+
+<p>Often, we cling to some so called “architecture” without really knowing why. <strong>Compliance with an architecture pattern yields consistency and beauty in terms of that pattern but not necessarily in terms of the nature of software itself.</strong></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Model–view–presenter">Model-View-Presenter</a>, for instance, is not an architecture. It’s a subjective observation, a simplified model of reality, a perceived pattern:</p>
+
+<p><img src="/blog-images/software-development/architecture/mvp.jpg" alt="" /></p>
+
+<p><strong>Concepts like MVP, MVC, MVVM and VIPER are more descriptive than normative. They describe patterns that emerge in effective architectures. But they’re never the true basis or cause for effective architecture.</strong></p>
+
+<p>There are myths in our field that we’ve conjured up through blind adherence to observed patterns. But <strong>when you turn an observation into a dogma, you’ve lost the way</strong>.</p>
+
+<p>Here are just some of those <strong>myths</strong>:</p>
+
+<ul>
+  <li>Views must not access models</li>
+  <li>Ideally, all code should be functional (spoiler: it can’t be and it shouldn’t)</li>
+  <li>The functional core of an app resides in the model</li>
+  <li>Everything must be unit-tested</li>
+  <li>Independence is for re-usability</li>
+  <li>The “model” is the state of the application</li>
+  <li>Singletons are bad</li>
+  <li>Views must have no behaviour</li>
+  <li>View controllers are the only acceptable “controller” type</li>
+  <li>The view-model layer is only for output</li>
+  <li>Different “architectures” are mutually exclusive</li>
+</ul>
+
+<p>We won’t challenge them directly. But when we’re able to put such ideas in perspective and understand where they come from, they appear small-minded, arbitrary, over-restrictive, superficial and needlessly confusing.</p>
+
+<h2 id="product-process-principles">Product, Process, Principles</h2>
+
+<p>So, if architecture patterns aren’t architecture, then what is? Let’s start at the beginning. Every type of productivity involves these layers:</p>
+
+<p><img src="/blog-images/software-development/architecture/product-process-principles.jpg" alt="" /></p>
+
+<p>Here is what they mean in our context:</p>
+
+<ol>
+  <li>The <strong>product</strong> is the ultimate outcome. The product of <em>software architecture</em> is software - not “architecture”.</li>
+  <li>The <strong>process</strong> produces the product with respect to the principles. It is the dynamic activity (or negligence) of the architect.</li>
+  <li>The <strong>principles</strong> describe the domain of production, its entities and rules. They’re the science of the materials and building blocks the architect has to work with. The basic material of <em>software architecture</em> is code.</li>
+</ol>
+
+<h3 id="product">Product</h3>
+
+<p>Note, that our approach applies to everything made of code, independent of the underlying hardware-structure. Technical <em>system architecture</em> is a different subject. So you may have any type of software in mind: A highly distributed system, a microservice, a mobile app, a web service, whatever you’re doing.</p>
+
+<p>Now, <strong>the global high-level code structure that we commonly call <em>architecture</em> describes what holds a particular software product together and what makes it a <em>thing</em> at all</strong>. It’s a level of analysis applicable to any product, even if the product wasn’t designed at that level.</p>
+
+<h3 id="principles">Principles</h3>
+
+<p><strong>Principles, on the other hand, are the natural laws that govern the universe in which the product arises. They determine what can possibly manifest as a stable entity.</strong></p>
+
+<p>Everything exists as a consequence of such laws and only as far as it is in accordance with them. As far as something disintegrates, it is obviously, as a <em>thing</em>, not in accordance with the laws of its universe.</p>
+
+<p><strong>Our notion of <em>software architecture</em> includes not only the product structure itself but also the universal principles that enable and regulate it.</strong></p>
+
+<h2 id="principled-software-development">Principled Software Development</h2>
+
+<h3 id="applicability">Applicability</h3>
+
+<p>Code that violates fundamental principles causes myriads of negative symptoms. And hundred of books have been written about these symptoms. They name them, describe them, explain them, classify them, warn against them and prescribe patterns to deal with them. Obviously, all that complexity is superficial and unnecessary if we see the common underlying problem. And that’s the simplicity, elegance and beauty principled software design has to offer.</p>
+
+<p>While principles might seem trivial or abstract at first, their power lies in their combinded far reaching implications. A deeper understanding of code provides guidance and clarity, from how to lay out global structure down to the nitty gritty details of how to lay out a four line function.</p>
+
+<h3 id="objectivity">Objectivity</h3>
+
+<p>All advice on code design preaches that <a href="https://www.goodreads.com/book/show/39996759-a-philosophy-of-software-design">“strategic”</a> or <a href="https://www.goodreads.com/book/show/3735293-clean-code">“clean”</a> engineering is superior over tactical hacking, and that discipline pays off over time. Yet in practice, the often arbitrary collections of conflicting symptom-level heuristics never inspire the deep clarity we would need to actually stop, think and clean up. To walk the walk, we must be able to clearly distinguish the correct path from all its sloppy alternatives.</p>
+
+<p>Now, the post-modernist in all of us might feel that there is no such thing as a “correct” path and that nothing objective can be said about “good” code. However, if we assess code at a fundamental level, we can clinically describe what it is, without judgement or imperative. Such observed principles are the basis for more clarity and objective reasoning in practice.</p>
+
+<p>With a principled mind, we see into the logical heart of things, and our professional decisions are no longer guess work, personal taste, intuititive art, black magic or mindless copying of “best practices”.</p>
+
+<h3 id="humility">Humility</h3>
+
+<p>“Architecture” indeed often refers to the core nature and smallest building blocks of a thing. The “architecture of the universe” refers to physical laws and subatomic particles. The “architecture of life” can refer to the bio chemsistry and molecules that gave rise to the first living organism.</p>
+
+<p>And we cannot work <em>against</em> such pre-existing architecture, we have to work <em>with</em> it. To grow into a healthy long-lived human being, we must design our lifestyle in accordance with <em>the architecture of human existence</em>. To grow a healthy long-lived code base, we must design it in accordance with <em>the architecture of code</em>.</p>
+
+<p>Ultimately, negative consequences and bad karma aren’t even the proper reason for why we should adhere to principles. Our reason should be the realization that “violating” them is to ignore reality and to resist the natural laws of the universe. Who would ever want to do that? We stick to principles as a matter of principle.</p>
+
+<h2 id="the-role-of-uncle-bobs-principles">The Role of Uncle Bob’s Principles</h2>
+
+<p>You might be wondering what Uncle Bob has to say about all this. How do his famous principles fit into the picture?</p>
+
+<p><a href="https://blog.cleancoder.com">Robert C. Martin (a.k.a. Uncle Bob)</a> is not just a pioneer of the agile and craftsmanship movements, he also laid a foundation for methodical software architecture. His <a href="https://web.archive.org/web/20150906155800/http://www.objectmentor.com/resources/articles/Principles_and_Patterns.jpg">11 principles of class and package design</a> are profound and have vast implications on code structure.</p>
+
+<p><img src="/blog-images/software-development/architecture/robert-martin-uncle-bob.jpg" alt="" /></p>
+
+<p><strong>While Uncle Bob is a legend among developers, most do not know, let alone apply, the principles he repeatedly wrote about since first publishing them more than two decades ago. As true software craftsmen, our thinking should revolve around such essential timeless principles, instead of the ephemeral (and by themselves meaningless) technical details of the latest technologies.</strong></p>
+
+<p>We’ll cover the wisdom of all of Uncle Bob’s principles and more. However, we approach it from a different perspective, in our own terms, less as a list of abstract definitions and more integrated into a meaningful learning process.</p>
+
+<p>Our line of reasoning leads to results that contain abstractions of Uncle Bob’s principles. We’ll also present some explicit arguments for why certain generalizations of those principles make sense.</p>
+
+<p>Most importantly, <strong>the laws we deduct do not parcel out classes or packages. Instead, they apply to all code artifacts at all scales, from functions to large sub-systems</strong>. This also means we <strong>should</strong> apply them at all scales because conforming to a law at one level, say at the class level, does not guarantee conformance at others, like at the package level.</p>
+
+<p>As far as this book conveys the ideas of Uncle Bob’s principles, it provides an additional access to their essence. <strong>Getting a feel for underlying reasons has a bigger impact on practice and is more profoundly valuable than just knowing a list of Dos and Don’ts.</strong></p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[In part 2 of this series on software architecture, we discuss the relevance of principles or "natural laws" that govern the realm of code.]]></summary></entry><entry><title type="html">Zen in the Art of Software Architecture, Introduction</title><link href="https://www.flowtoolz.com/2019/01/14/zen-in-the-art-of-software-architecture-introduction.html" rel="alternate" type="text/html" title="Zen in the Art of Software Architecture, Introduction" /><published>2019-01-14T00:00:00+01:00</published><updated>2019-01-14T00:00:00+01:00</updated><id>https://www.flowtoolz.com/2019/01/14/zen-in-the-art-of-software-architecture-introduction</id><content type="html" xml:base="https://www.flowtoolz.com/2019/01/14/zen-in-the-art-of-software-architecture-introduction.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/introduction/zen-dojo.jpg" title="Zen in the Art of Software Architecture, Introduction" alt="Zen in the Art of Software Architecture, Introduction. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy" /></p>
+
+<p><i>This starts a series of book excerpts from: “Zen in the Art of Software Architecture - From Timeless Principles to Timely Products”. The draft keeps evolving, and I change published content without highlighting every edit. Last edit: May 27, 2019</i></p>
+
+<h2 id="the-call-to-adventure">The Call to Adventure</h2>
+
+<p>When I was eleven, I taught myself <a href="https://en.wikipedia.org/wiki/Pascal_(programming_language)">Pascal</a> and, shortly after, <a href="https://en.wikipedia.org/wiki/C%2B%2B">C++</a>, <a href="https://www.goodreads.com/book/show/420643.Programming_Windows">Windows programming</a>, <a href="https://en.wikipedia.org/wiki/DirectX">DirectX</a> and <a href="https://www.goodreads.com/book/show/2340474.Tricks_of_the_Game_Programming_Gurus">game development</a>. I remember cranking out countless over-engineered little beasts of code.</p>
+
+<p>Again and again, those games, game engines and architectural frameworks would lead into dead ends, where  their structure hopelessly diverged from their purpose or their complexity brought them to a halt.</p>
+
+<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/introduction/first-steps.png" title="Zen in the Art of Software Architecture, Introduction" alt="Zen in the Art of Software Architecture, Introduction. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy" /></p>
+
+<p>And again and again, I started all over, wondering: How on earth is real professional software even possible? There must be some system or secret that I still don’t know.</p>
+
+<p>I chased answers to that fundamental question ever since. The abstract principles of software development have always intrigued me far more than the technical details.</p>
+
+<h2 id="are-we-having-fun-yet">Are We Having Fun Yet?</h2>
+
+<p>To my surprise, I didn’t find answers at universities. In fact, their process- and architecture related courses didn’t much reflect modern reality. Software engineering, as they presented it, had already been <a href="https://blog.codinghorror.com/software-engineering-dead/">kind of dead</a>.</p>
+
+<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/introduction/audimax-dresden.jpg" title="Zen in the Art of Software Architecture, Introduction" alt="Zen in the Art of Software Architecture, Introduction. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy" /></p>
+
+<p>So I went on a journey of working on code, analyzing code, reading about code and thinking deeply about the nature of code. Writing down and integrating everything I learned, a theoretical framework emerged that seemed to explain common “architectures” and to answer all my questions.</p>
+
+<p>It’s abstract but simple and pragmatic, and I’ve been using it for years now to understand and (re-)factor my projects. I feel it might actually draw parallels to some deeper truths beyond software, we’ll see.</p>
+
+<p>In order to sort out, delineate and nail down my learnings, I’m writing this book. Also, the presented thought framework could be interesting to other people in the periphery of software development. I’ve put much work into it because it offers a perspective that I had greatly missed in the field.</p>
+
+<p>My approach is systematic. However, I won’t rattle down a longwinded proof and reference list for every statement I make. It’s not an academic text. I don’t have time for that, and neither have you. For the sake of brevity and practical value, let’s focus on the essential line of reasoning. I’ll sound opinionated, and you’ll stay motivated. More fun for both of us 😃</p>
+
+<h2 id="where-were-coming-from">Where We’re Coming From</h2>
+
+<p>As proud software craftsmen, our thinking is customer-centric, our code is object-oriented and functional, our design is domain-driven, our development is test- and behaviour-driven. We integrate automatically, iterate rapidly, deliver continuously and burn out occasionaly, fine.</p>
+
+<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/introduction/craftsmanship-tools.jpg" title="Zen in the Art of Software Architecture, Introduction" alt="Zen in the Art of Software Architecture, Introduction. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy" /></p>
+
+<p>Many of these techniques come in quite far down the delivery pipeline, yet all steps in the pipeline rely and build upon quality input. <strong>No amount of automated testing and continuous integration can address or even recognize the future costs and consequences of fundamentally flawed code.</strong></p>
+
+<p>However, most code-related techniques are quite low-level: The domain model is only one part of the application, design principles and patterns have quite local scope, and <strong>a thousand perfect little TDD cycles with perfect little tests and refactorings can still amount to a mess on the grand scale</strong>.</p>
+
+<p>That’s why we developers crave higher-level frameworks and patterns to guide our micro decisions. And that’s where the A-word comes in: <em>Architecture</em>.</p>
+
+<h2 id="where-were-going">Where We’re Going</h2>
+
+<p>Instead of promoting some new “architecture”, we will lay out a wider thought framework that can relate and explain the patterns we know.</p>
+
+<p>Equipped with deep clarity about the fundamental principles of code structure, the patterns and rules we think of as architecture will dissolve and become non-issues. How to architect clean software systems and how to integrate different approaches will be obvious.</p>
+
+<p>And it should be obvious because software, at its core, is surprisingly simple. Just like life. We’ll see that much of it comes down to telling the truth.</p>
+
+<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/architecture/introduction/pinocchio.jpg" title="Zen in the Art of Software Architecture, Introduction" alt="Zen in the Art of Software Architecture, Introduction. software architecture, software, architecture, zen, code quality, software quality, book, software development, architecture pattern, design pattern, productivity, philosophy" /></p>
+
+<p><strong>Code, like speech, must be truthful. Then, it’s lasting, beautiful, lean, efficient and simple. When our solution is complex, chances are it’s not sophisticated but just clumsy. Chances are we don’t know the true problem just yet.</strong></p>
+
+<p>Now, before we get into the <a href="https://en.wikipedia.org/wiki/Dharma">dharma</a> of program code, let me recapture the spirit of this book by going over the remaining terms in the title: <em>Zen in the Art of Software Architecture - From Timeless Principles to Timely Products</em></p>
+
+<h3 id="zen">Zen</h3>
+
+<p>We’ll take a level-headed look at a fuzzy term that normally tends to overwhelm and that some might call a “meaningless buzzword”. We’ll aim at methodical precision, philosophical depth, ruthless pragmatism and absolute simplicity.</p>
+
+<p>Understanding universal truths about software, you’ll see the big picture and true nature of your project, and that will put you into a flow state and the “fun” back into functioning code.</p>
+
+<h3 id="art">Art</h3>
+
+<p>Software architecture requires more than science, engineering and craft. In order to make high quality software products with agility, you want to become an educated engineer, craftsman and artist. To knowledge and skill the <em>software artist</em> adds the psychological maturity that allows her to …</p>
+
+<ol>
+  <li>See the true meaning and pragmatic structure of software</li>
+  <li>Let go of mere technicalities, perfectionism and feature creep</li>
+  <li>Intuitively feel when something is <em>good enough</em> as returns diminish</li>
+  <li>Truly empathize with users</li>
+</ol>
+
+<h3 id="timeless-principles">Timeless Principles</h3>
+
+<p>Two steps make the core of this book: 1) Deducting universal laws of code structure, and 2) analyzing common patterns of architecture and design through the lense of the established thought framework.</p>
+
+<p>In the process, we’ll look at many hand sketched diagrams but never at code or pseudo code because we want to understand high-level structure not low-level processes.</p>
+
+<p>We’ll also not touch on specific technologies, software types or application domains. Our focus will be on the message rather than the medium, so to speak.</p>
+
+<h3 id="timely-products">Timely Products</h3>
+
+<p>Timely products result from agility. Unfortunately, the term “agile” is overused and misunderstood. Let me say this much: Agility is not <a href="https://en.wikipedia.org/wiki/Scrum_(software_development)">Scrum</a>. Agile Software Development is any implementation of the ideas behind the <a href="https://agilemanifesto.org/principles.html">Agile Manifesto</a>. And effective architecture as we understand it derives from those ideas.</p>
+
+<p>Effective architecture has all kinds of effects that help produce more value over time and, thereby, deliver timely products: It makes development flexible, puts emphasis on customer value, yields re-usable code, raises team engagement, accelerates onboarding, solves object-oriented design problems, promotes a common domain-specific language, avoids all sorts of technical risks, makes code more testable and so on.</p>
+
+<p>We could drone on endlessly listing the direct and implied practical benefits. However, those benefits are not the reason for why we aspire to effective architecture. They are just its arbitrary manifestations. Of course, what “effective” means relates to the essential role and purpose of code, and we’ll look at that more closely soon.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[A short intro to ”Zen in the Art of Software Architecture - From Timeless Principles to Timely Products”. The why, what and how of this project.]]></summary></entry><entry><title type="html">How a Minimalist Productivity App Changed My Life</title><link href="https://www.flowtoolz.com/2018/07/13/how-a-minimalist-productivity-app-changed-my-life.html" rel="alternate" type="text/html" title="How a Minimalist Productivity App Changed My Life" /><published>2018-07-13T00:00:00+02:00</published><updated>2018-07-13T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2018/07/13/how-a-minimalist-productivity-app-changed-my-life</id><content type="html" xml:base="https://www.flowtoolz.com/2018/07/13/how-a-minimalist-productivity-app-changed-my-life.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/flowlist/icon_screen.jpg" title="How a Minimalist Productivity App Changed My Life" alt="How a Minimalist Productivity App Changed My Life. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" class="ft-shadow" /></p>
+
+<p><i>I was missing a self-management tool that fits my needs. So I built it. This article is about why I had to create something new, how it changed the way I feel and, ultimately, how interaction design can support creative flow states.</i></p>
+<p><i>More about the app itself is at <a href="/flowlist/" target="_blank" onclick="ga('send', 'event', 'link', 'click', 'flowlistapp.com');">flowlistapp.com</a>.</i></p>
+
+<h2 id="1-an-itch-to-scratch">1. An Itch to Scratch</h2>
+
+<p>Sometimes, I feel overwhelmed by all the stuff I have to do, and even more by all the stuff I’m passionate about. So most of my life, I’ve been on a quest to sort myself out, get more shit done and turn more ideas into real things.</p>
+
+<p>The task managers I used to organize my TODOs and <strong>thoughts</strong> played a central role in that quest. And I’ve used them all, some for a long time:</p>
+
+<p><img src="/blog-images/software-development/flowlist/task_managers.png" style="max-width:683px" title="I tried hard to like these task managers" alt="Task managers I tried: Agenda, Evernote, Omnifocus, Reminders, Things 3, Todoist, Trello, Wunderlist. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>You guessed it - I found them all frustrating. They just felt rigid, cumbersome and distracting. One particular aspect they all share doesn’t jive at all with the way I think: They force your content into fixed categories like <em>Project</em>, <em>Task</em>, <em>Subtask</em> and <em>Description</em>.</p>
+
+<p>However, reality isn’t fragmented by such arbitrary categories, much less can you know the category or abstraction level of a thought the moment it pops into your head. The structure of ideas, tasks or “projects” rather emerges from the process of thinking about- or working on them.</p>
+
+<p>Because they are so rigid, conventional task managers are really bad at capturing thoughts, brainstorming, developing ideas through “live thinking” or iterating over tasks and projects over time.</p>
+
+<p>I need to evolve my captured items to keep them in line with reality. I need a tool that supports an agile i.e. realistic way of thinking, working and living. That means, it must allow to freely mould the item hierarchy: group items together, add sub items <strong>into</strong> an item, move items to a whole different level, and so forth.</p>
+
+<p>So in June 2017, I prototyped a novel kind of task manager and named it <em>Flowlist</em>. And I’ve been happily using it every day since. This year, I decided to turn Flowlist into much more and make it available to you. Now, after 569 Git commits, Flowlist is <a href="https://geo.itunes.apple.com/app/flowlist-manage-life-in-flow/id1396163478?mt=12">available on the Mac App Store</a>.</p>
+
+<h2 id="2-how-flowlist-works">2. How Flowlist Works</h2>
+
+<p>Flowlist is simple but subtle and powerful. Here’s a 30s video of some work flows:</p>
+
+<video style="width:100%;max-width:960px;margin-bottom:10px" controls="" autoplay="" class="ft-shadow">
+    <source src="/flowlist/AppStore_Preview_60fps.mp4" type="video/mp4" />
+</video>
+
+<p>I wanted Flowlist to get me into a flow state. This led me to some seemingly radical design choices. Let’s look at four ways Flowlist helps me to focus.</p>
+
+<h3 id="21-a-simple-but-universal-data-model">2.1. A Simple But Universal Data Model</h3>
+
+<p>Flowlist does not force my stuff into predefined categories. Instead, it knows only titled items. But those items may contain other items, just like folders on your computer may contain other folders. So I evolve my own item hierarchy:</p>
+
+<ul>
+  <li>Group items together</li>
+  <li>Add subitems into any item</li>
+  <li>Move items to a whole different level in the hierarchy, i.e. into any other item including the root or <em>Home</em> item</li>
+</ul>
+
+<p>There’s no limit to how deeply nested the items can be, and I can edit this hierarchy in every way to keep it true to my life.</p>
+
+<h3 id="22-total-control-via-few-keys">2.2. Total Control Via Few Keys</h3>
+
+<p>Flowlist is so simple that I can control it without mouse or trackpad. With just a few intelligently laid out key commands, I have all the power at my fingertips. And that’s only suitable for a productivity app that takes a lot of text input anyway. At any moment, the menus show exactly what key commands are applicable:</p>
+
+<p><img src="/blog-images/software-development/flowlist/key_commands.png" style="max-width:483px" title="The Edit Menu" alt="The menus show the available key commands for rapid list editing. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>This keyboard-centric input has some nice implications:</p>
+
+<ol>
+  <li>It is fast.</li>
+  <li>It is uninterrupted. My hands never have to leave the keyboard for anything. This also means I can stay zoned in on my content on the screen.</li>
+  <li>It makes it possible to have a super clean user interface.</li>
+</ol>
+
+<h3 id="23-an-immersive-user-interface">2.3. An Immersive User Interface</h3>
+
+<p>I choose the scope of my focus by navigating the item hierarchy. No matter on what level I am, I always edit the center list, while context is to the left and details are to the right:
+<img src="/blog-images/software-development/flowlist/clean_interface.png" style="margin-bottom:-20px;max-width:638px" title="How A UI is Supposed to Look Like: Super Clean Without Clutter" alt="Keyboard-centric input lead to a clean user interface for working in a flow state. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" />
+There’s nothing else that could distract. The interface is super clean. No menus, buttons, bars, alerts, popups and such clutter.</p>
+
+<p>Also, Flowlist animates all navigation and editing. So my eyes easily keep track of where I am and how the items and their overall structure change.</p>
+
+<h3 id="24-window-management-for-deep-concentration">2.4. Window Management For Deep Concentration</h3>
+
+<p>I control the window via key commands, which go both ways and act as toggles:</p>
+
+<p><img src="/blog-images/software-development/flowlist/window_management.png" style="max-width:408px" title="Window Management For Deep Concentration" alt="Window Management For Deep Concentration. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>Toggleing the window via <strong>⌘W</strong>, can help to get Flowlist out of the way and access the desktop or to switch back and forth between reading content in another app and editing related items in Flowlist.</p>
+
+<p>Flowlist is meant to be used in fullscreen mode:</p>
+
+<p><img src="/blog-images/software-development/flowlist/fullscreen.png" class="ft-shadow" title="Flowlist in Fullscreen" alt="Flowlist in fullscreen for immersive work in a flow state. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>But there’s also a <i>Monotasking</i> mode in which all other apps, the dock and the menu bar get blended out. Fullscreen and monotasking help me to really focus.</p>
+
+<h2 id="3-how-i-use-flowlist">3. How I Use Flowlist</h2>
+
+<p>I’ve been using Flowlist daily for more than a year now, and it had a huge impact on my life. I feel more in control and on the ball with my various endeavours. I do more in a day and more of the important stuff.</p>
+
+<p>At the same time, nothing gets lost: no errand, no urgent task, no small idea. Knowing that nothing gets lost made me calmer and more relaxed, and it improved my ability to concentrate on the task at hand.</p>
+
+<p>Here are seven ways to describe <strong>what</strong> I do with Flowlist:</p>
+
+<ol>
+  <li>Capture whatever pops into my head</li>
+  <li>Support my thought process</li>
+  <li>Grow a backlog of ideas</li>
+  <li>Establish good habits</li>
+  <li>Manage tasks and projects</li>
+  <li>Keep track of responsibilities</li>
+  <li>Plan my day and my future</li>
+</ol>
+
+<p>Now, Flowlist can do all these things for me, not because it’s packed with all the usual bells and whistles, but because it is so radically simple. It’s like lego: The building blocks are primitive but you can build anything you want.</p>
+
+<p>The ways people use Flowlist are as individual as the ways they use legos or notebooks. Let’s look at five aspects of <strong>how</strong> I personally use it.</p>
+
+<h3 id="31-top-level-categories">3.1. Top-Level Categories</h3>
+
+<p>The <em>Home</em> item is the root of the hierarchy. Therein, I created seven items as my top-level categories:
+<img src="/blog-images/software-development/flowlist/top_level_items.png" style="max-width:677px;margin-bottom:-20px" title="My Top-Level Item Categories" alt="My top-level item categories. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" />
+Those lay the foundation for how I organize myself. I often adjust their order to reflect current priorities. Another person’s approach and top-level categories would likely be different.</p>
+
+<h3 id="32-upcoming">3.2. Upcoming</h3>
+
+<p>I put appointments, stuff I’m gonna do soon, that is bound by deadlines or just relatively urgent into the top-level category <em>Upcoming</em>. This includes reminder items that refer to significant items in other top-level categories. Of course, I prioritize the upcoming items, so they’re listed in the order I plan to check them off.</p>
+
+<p>By the way, time-related perspectives like <em>Today</em> and <em>Upcoming</em> will integrate much better when I will add due dates and a time filter with a calendar view to Flowlist.</p>
+
+<h3 id="33-today">3.3. Today</h3>
+
+<p>Every morning, I plan my day by creating a list in the top-level item <em>Today</em>.
+<img src="/blog-images/software-development/flowlist/today_list.png" style="max-width:682px;margin-bottom:-20px" title="My Todo List For The Day" alt="My Todo List For The Day. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" />
+The planning involves the following steps:</p>
+
+<ol>
+  <li>Check off, move elsewhere or delete stuff that isn’t relevant anymore.</li>
+  <li>Copy all items in <em>Daily Templates</em> for daily recurring habits to <em>Today</em>. They include checklists for morning routine, workout, yoga, shoulder recovery and supplements.</li>
+  <li>Scan <em>Upcoming</em> and other categories. Move or add appropriate items to <em>Today</em>.</li>
+  <li>Prioritize items in <em>Today</em> so they’re listed in the order I plan to check them off. This is an opportunity to put important stuff first. I also batch process. For example, if several items have to be done in the city, I group them together as a <em>City</em> item and schedule it in terms of sequence.</li>
+  <li>Planning my day takes 10 minutes. After that, I can just execute and check off today’s items top to bottom. At least, I have orientation and perspective throughout the day, which allows me to shift things around when necessary.</li>
+</ol>
+
+<h3 id="34-prioritization">3.4. Prioritization</h3>
+
+<p>First of all, visual prioritization helps to protect the important but non-urgent things from the onslaught of unimportant and (seemingly) urgent things. This is essential and goes back to <a href="https://en.wikipedia.org/wiki/Stephen_Covey">Stephen Covey</a> and <a href="https://www.artofmanliness.com/articles/eisenhower-decision-matrix/">Eisenhower’s Decision Matrix</a>:</p>
+
+<p><img src="/blog-images/software-development/flowlist/eisenhower_matrix.png" style="max-width:275px" title="Eisenhower's Decision Matrix" alt="Eisenhower's Decision Matrix to distinguish important, unimportant urgent and non-urgent tasks. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>Flowlist naturally allows to prioritize on all levels of the hierarchy, i.e. to change the item order in all subitem lists. So, I prioritize top-level categories against each other as well as the minutiae involved in small tasks.</p>
+
+<p>To quickly sort a list by priority and to distinguish ongoing items, I also set those items in progress. Setting an item in progress moves it to the top and changes its icon to a play button:
+<img src="/blog-images/software-development/flowlist/next_action_step.png" style="margin-bottom:-20px" title="Hierarchical Items Can Express Many Levels of Detail" alt="Hierarchical Items Can Express Many Levels of Detail. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" />
+On the more detailed levels, prioritization is less about importance and more about sequence of execution, and that helps me immensely at keeping track.</p>
+
+<p>I have quite a few projects or responsibilities I wanna stay on top of, some as future options, some on hold, some I’m currently dealing with. When I get back to a task or project, I need to know exactly where it stands so I can continue working on it right away. I want to know what I did last, what I’ll do next and how it will unfold down the road.</p>
+
+<p>Through hierarchical prioritization, my next action step is always well defined, down to whatever level of detail I cared to define it.</p>
+
+<p>When moving to a detail list that has no selections, Flowlist selects the top-most item. So I just keep hitting the <strong>→</strong> key to dive deeper into my next action step. Right now, the items in this chain read like this:</p>
+
+<blockquote>
+  <p>Home → Projects → Software → Flowlist → Post-Release Action Steps → Basic Publishing → Blog Post → Formulate 1st Draft</p>
+</blockquote>
+
+<p>I can’t think of another task manager that either allows that kind of depth or exhibits that conceptual simplicity, let alone one that does both.</p>
+
+<h3 id="35-creativity">3.5. Creativity</h3>
+
+<p>The side of Flowlist that feels most  valuable to me is how it supports my thought process. I capture what I think, and I think by editing what I captured. As my thoughts and projects evolve, so do their manifestations in Flowlist. A note might grow into a product, a big challenge might dissolve into nothing, two formerly unrelated tasks might merge.</p>
+
+<p>I do that day by day but also in realtime, moment by moment. Thinking and editing have become one. This was possible because editing in Flowlist is fast and includes the hierarchical relation between items.</p>
+
+<p>Say I just added a subtask to a task in a project. Now, a web page provided a hint that will help me accomplish the subtask, so I want to add the hint as a description to the subtask. I copy the related text from the web page, switch to Flowlist, navigate <strong>into</strong> my empty subtask and press <strong>⌘V</strong>. The lines in the copied text will be inserted as distinct items into my subtask item.</p>
+
+<p>Like writing in general, Flowlist is a great way for me to sort out, structure and delineate my thoughts, developing them into apps, blog posts, design concepts, strategies and so on. In that sense, Flowlist is already a creative writing tool.</p>
+
+<h2 id="4-what-flowlist-will-become">4. What Flowlist Will Become</h2>
+
+<p>Put on shades, the future is bright. The current version 1.0.8 isn’t even the beginning. I have many things planned, ranging from interface beautification over little features for more consistency and convenience up to extensions that will vastly expand what one can possibly do with Flowlist.</p>
+
+<p><img src="/blog-images/software-development/flowlist/shades.png" style="max-width:128px" title="My Vision For Flowlist Goes Way Beyond Task Management" alt="My Vision For Flowlist Goes Way Beyond Task Management. task management, task, app, flow, todo list, flowlist, task list, omnifocus, wunderlist, todoist, focus, trello, agenda, agile, kanban, productivity, apple, mac, macos, ios, osx, self management, project management, organizer, getting things done, getting shit done, note taking, brainstorming, creative writing, hierarchical data" /></p>
+
+<p>From now on, I let users decide what feature I’m gonna add next. <a href="https://flowtoolz.typeform.com/to/R5lp8b" target="_blank" onclick="ga('send', 'event', 'link', 'click', 'flowlist feature vote');">Click here to vote</a>.</p>
+
+<p>Here are just five of the more basic ideas that I think would add great value:</p>
+
+<h3 id="41-ios-app-for-iphone-and-ipad">4.1. iOS App for iPhone and iPad</h3>
+
+<p>Of course. This is one of the most frequent requests from beta testers. You’ll be able to switch devices and use Flowlist on the go, while your data will stay in sync.</p>
+
+<h3 id="42-system-wide-key-command">4.2. System-Wide Key Command</h3>
+
+<p>This will allow you to capture thoughts when you’re not even interacting with Flowlist. Neither will you forget anything nor will you be distracted. Whenever you have an idea, you press a keyboard short cut, type in a note and then move on with whatever else you were doing.</p>
+
+<h3 id="43-dark-mode">4.3. Dark Mode</h3>
+
+<p>You’ll be able to switch to a <a href="https://developer.apple.com/design/human-interface-guidelines/macos/visual-design/dark-mode/" target="_blank">cool looking dark user interface</a> for increased sleep quality, decreased stress on your eyes, working at night and just feeling like a pro. This will also let content stand out more, be it text, colors or item attachements.</p>
+
+<p>MacOS Mojave (10.14) will introduce dark mode as a system-wide feature. Flowlist will not require macOS 10.14 for dark mode, but it will play along perfectly with the way apps are supposed to integrate dark mode with Mojave.</p>
+
+<h3 id="44-creative-writing">4.4. Creative Writing</h3>
+
+<p>Items will be able to hold some sort of long form text. This seemingly minor addition will really turn Flowlist into a creative writing tool. Organizing thoughts will, at the same time, structure and grow a potential text.</p>
+
+<p>To go along with that, you’ll be able to print and export any item as plain text, LaTeX, Markdown and HTML, with autogenerated headers, subheaders and so on.</p>
+
+<h3 id="45-due-dates-colors-tags-keyword-search-">4.5. Due Dates, Colors, Tags, Keyword Search …</h3>
+
+<p>Flowlist will have independent filters that let you customize what items you see. You’ll be able to filter by custom tags, colors, search keywords, due dates (with calender view) and item states (with addional state <em>trashed</em>). For example, you’ll be able to setup a filter that shows all appointments and open tasks of today.</p>
+
+<h2 id="5-how-you-can-experience-flowlist">5. How You Can Experience Flowlist</h2>
+
+<p>You may download Flowlist for free from the Mac App Store. It is limited to 100 items, not counting groups, which will be enough in many contexts. It has all features, saves all items and will never expire.</p>
+
+<p><a href="https://geo.itunes.apple.com/app/flowlist-manage-life-in-flow/id1396163478?mt=12" target="_blank" onclick="ga('send', 'event', 'button', 'click', 'app store');">
+    <img style="width:100%;max-height:68px;margin-top:40px;margin-bottom:40px" src="/flowlist/App_Store_Badge.svg" title="Download Flowlist For Free From the Mac App Store" alt="" />
+</a></p>
+
+<p>If you need more items or wanna support the development of Flowlist, you may upgrade to the full version from inside the app. Once purchased, the full version is valid forever. No subscription required.</p>
+
+<p>Owners of the full version get new features as free updates, even when the price rises. I will <strong>not</strong> release anything like “Flowlist 2” as a separate app at a higher price. This way, I reward users who back this project and get on board early.</p>
+
+<p>There’s also a <i>Summer Special</i> going: Until September 20, I offer an introductory price i.e. 50% off. For more details and latest updates, visit <a href="/flowlist/" target="_blank" onclick="ga('send', 'event', 'link', 'click', 'flowlistapp.com');">flowlistapp.com</a>.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[I created Flowlist in June 2017 and have been using it daily since. Its radical simplicity also makes it super powerful. Now it is released. This is the story.]]></summary></entry><entry><title type="html">SwiftObserver: Elegant Reactive Observing in Swift</title><link href="https://www.flowtoolz.com/2018/03/17/swift-observer-elegant-reactive-observing-in-swift.html" rel="alternate" type="text/html" title="SwiftObserver: Elegant Reactive Observing in Swift" /><published>2018-03-17T00:00:00+01:00</published><updated>2018-03-17T00:00:00+01:00</updated><id>https://www.flowtoolz.com/2018/03/17/swift-observer-elegant-reactive-observing-in-swift</id><content type="html" xml:base="https://www.flowtoolz.com/2018/03/17/swift-observer-elegant-reactive-observing-in-swift.html"><![CDATA[<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/reactive-swift-programming/pyramid.jpeg" width="100%" /></p>
+
+<p><i>Care about the code? Jump over to <a href="https://github.com/codeface-io/SwiftObserver">SwiftObserver on Github</a>.</i></p>
+
+<p>Recently I’ve been discussing app architecture a lot with colleagues. As ever so often, our main question was: How do we propagate information from the bottom of the hierarchy to the top?</p>
+
+<p>Delegates came up and where quickly dismissed. Notifications came up and where quickly dismissed. Closures came up and were embraced. Functional stuff is all the craze. For good reasons.</p>
+
+<p>We looked at different Reactive/Redux frameworks: Reactive Swift, Reactive Kit, ReSwift, RxSwift.</p>
+
+<p>To be honest, I was a bit overwhelmed by all the new terms around old ideas and old terms for new applications: observable, reducer, aspect, signal, signal producer, variable, stream, cancelable, disposable, dispose bag, event emitter, source, sink…</p>
+
+<p>However, I got obsessed with callback mechanisms in general and in Swift in particular.</p>
+
+<p>As a method of exploring and learning, I wrote three fundamental primitives for reactive Swift programming, which are solid, simple, sufficient and sweet for my own taste.</p>
+
+<p>This compact library also compensates for what I didn’t like about common implementations. I guess I aimed at usability, readability, simplicity, safety and flexibility.</p>
+
+<p><a href="https://github.com/codeface-io/SwiftObserver">Checkout SwiftObserver on Github</a>. You can read the text there as the continuation of this article.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[Fundamental primitives for observing in Swift as a no BS approach to reactive programming. Stupid easy, safe, clean, readable, flexible, non-intrusive, sweet.]]></summary></entry><entry><title type="html">7 Steps to Break Free from Your Musical Baggage</title><link href="https://www.flowtoolz.com/2017/09/17/break-free-from-your-musical-baggage.html" rel="alternate" type="text/html" title="7 Steps to Break Free from Your Musical Baggage" /><published>2017-09-17T00:00:00+02:00</published><updated>2017-09-17T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2017/09/17/break-free-from-your-musical-baggage</id><content type="html" xml:base="https://www.flowtoolz.com/2017/09/17/break-free-from-your-musical-baggage.html"><![CDATA[<h2 id="a-7-step-strategy-for-songwriters-and-producers">A 7 Step Strategy for Songwriters and Producers</h2>
+
+<p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/self-development/break-free-from-your-musical-baggage/audio-work-station.jpeg" width="100%" class="ft-shadow" /></p>
+
+<p>Creating <a href="https://www.facebook.com/mellowtreemusic/">dreamy indie pop</a> is a passion of mine. When I was 5, I started violin practice. More than 20 years ago, I started composing on my computer. Now I’m putting together an album for the bloody first time. And as I have to decide on 2 or 3 more demos to include in the production, the hundreds of ideas I collected over two decades do what they do best: paralyzing me.</p>
+
+<p>Why am I telling you this? In this article, I’ll describe a problem that any music producer runs into sooner or later: being bogged down by musical baggage. And I’ll condense into 7 steps what, in my humble opinion, is the best strategy to break free from that baggage.</p>
+
+<p>Check out this book published by Ableton: <a href="https://makingmusic.ableton.com">https://makingmusic.ableton.com</a> It’s not comprehensive but thought provoking. It barely covers the issue but inspired me to articulate it. And I adopt its spirit and problem-solution format.</p>
+
+<p>I wrote this article to myself to sort out my thoughts and implant into my subconscious whatever insights I had. But I hope it’s valuable to others.</p>
+
+<h2 id="the-problem">The Problem</h2>
+
+<p>A musical idea may be a beat, a chord progression, a snippet of lyrics, a feeling, a specific style or instrumentation you want to explore, a melody or any combination of musical aspects. It’s the premise with which you go into a new song project, and it’s the vision that drives you forward.</p>
+
+<p>If you produce music, you accumulate artefacts that capture ideas. Those artefacts are typically text files, audio files, or project files of your digital audio workstation (Pro Tools, Logic, Ableton Live …).</p>
+
+<p>Now what’s the problem? Bear with me. Most of those artefacts are not complete demos, i.e. they don’t project a whole song but rather a few aspects of a song. A typical one is that 12 second loop that is deeply layered and sounds awesome but didn’t go anywhere.</p>
+
+<p>The problem with these idea artefacts is that they’re still there. The material you don’t use isn’t just sitting somewhere on a hard drive. It occupies a space in your mind as a permanent implied suggestion that, some day in some form, you ought to make proper use of it and present it to the world.</p>
+
+<p>When I develop an idea into a song, I ask myself, at least subconsciously, whether anything in my material collection would fit. When I set out to create a new song, I ask myself, at least subconsciously, whether I should rather combine some gems from my collection and make them shine.</p>
+
+<p>Your pre-existing material, whether you’re aware of it or not, instills doubt and paralysis into your process. And that’s not esoteric since there is no such thing as new music. You always combine familiar elements to create your music. The more elements you have at your disposal, the harder it becomes to decide and move forward.</p>
+
+<p>Imagine how it would feel if you had to start with a clean slate, without any pre-existing old ideas. Wouldn’t your approach be more fresh, inspired and authentic? On the other hand, there may indeed be some gems in your collection. You wanna bring those gems to life and get rid of the rest, so that every new project starts from a place of free inspiration and authentic expression of your current musical identity.</p>
+
+<h2 id="the-solution">The Solution</h2>
+
+<p>Here are the 7 steps. Some are short and simple. Others are a reasonably short and simple.</p>
+
+<p>Be aware that implementing them isn’t done in one afternoon. It might take you some time to get through your material. But that’s worth it. Just make sure not to waste time on the house keeping aspects (in particular steps 2–5) while you’re in a more creative mode.</p>
+
+<h3 id="step-1-capture">Step 1: Capture</h3>
+
+<p>Get every idea that’s still lingering in your head down into your idea folder, no matter how: as a textual description of what you wanna achieve, lyrics, chords, a recording, a project file or whatever.</p>
+
+<p>And for the future: Have a project template ready to capture new ideas at your main setup, and have an app ready to capture ideas on the go.</p>
+
+<h3 id="step-2-prune">Step 2: Prune</h3>
+
+<p>Prune your material collection. Don’t hesitate to delete ideas that have been mostly specific experiments, that you have outgrown or that can’t contribute anything significant to the kind of music you wanna make from here on out. Often the material that can be dropped is just part of an artefact like a track or section within a project file.</p>
+
+<p>Be radical. If it doesn’t jump in your face as something interesting, it’s probably arbitrary and can’t compete with your current taste and skill level. If in doubt, throw it out! And that’s easier said than done. Our inability to let go is what inhibits us the most.</p>
+
+<p>Remember: You are not your creative genius, and no one cares about how many ideas you came up with. All that matters is what you put out. Trust that your experience and musical development manifest in what you create now.</p>
+
+<h3 id="step-3-organize">Step 3: Organize</h3>
+
+<p>You want all your material in one place. And you want that place to be a list that lets you easily scan and evaluate your ideas when you’re in a creative mode.</p>
+
+<p>If there are multiple files related to an idea, put them in one folder. Don’t try to manage different ideas in the same folder, untangle them. Name your stuff just so you can identify what’s in there. If a project contains multiple distinct ideas but you don’t want to split it, at least name it in a way that lets you know later.</p>
+
+<p>This may all seem a bit <a href="https://en.wikipedia.org/wiki/Obsessive–compulsive_disorder">OCD</a>, in particular if you consider yourself a creative person, fair enough. But the reality is, it’s just how creative professionals get shit done.</p>
+
+<p>Especially if you have more than one role in the production process, you must be organized to get to results. Think of everything you are: Studio builder? Songwriter? Performer? Recording engineer? Sound designer? Producer? Mix engineer? Etc.</p>
+
+<h3 id="step-4-explicate">Step 4: Explicate</h3>
+
+<p>Some attributes of a musical artefact manifest the idea itself, i.e. something special and characteristic that is worth re-using. The function of other attributes is more to contextualize that idea. This is typically the case when you have a project file in which you started to enrich an idea.</p>
+
+<p>Take a moment to make the valuable aspects of each artefact explicit.</p>
+
+<p>Even if it seems silly to you now, create a text file in every idea folder and write some notes on what is the core of this idea. Later, when you’ll search your ideas for something useful, you’ll be in a different mindset, focussing on a larger scope. And that’s when your notes will come in handy.</p>
+
+<h3 id="step-5-revive">Step 5: Revive</h3>
+
+<p>Get back in touch with your ideas and make them accessible for songwriting.</p>
+
+<p>If you write music with score sheets, save your ideas as score sheets. If an idea is a loop or beat, bounce it down into an audio file that you can audit as it is or import into other projects. If one of your ways to write songs is to play guitar, write down the chords/tabs of ideas that have harmonies.</p>
+
+<p>Btw, tonal (melodic/harmonic) ideas should be written down in a way that makes them comparable and combinable across different keys. For example, I write down my chord progressions as chords in the key of C major plus the progression’s transposition in half tones. You could just as well capture progressions through chord functions (like V^7) plus key (like D maj).</p>
+
+<p>It also makes sense to put all lyrics that are not yet attached to other musical aspects into one file so you can search and combine them more quickly.</p>
+
+<p>Play your ideas with the instruments or tools they where written with, and make sure you still feel them. It may very well turn out there is nothing of substance in a particular idea anymore, which is an even better discovery: You can delete it!</p>
+
+<h3 id="step-6-combine">Step 6: Combine</h3>
+
+<p>Employing your snippets in songs should ultimately make your list of unused stuff disappear!</p>
+
+<p>When searching your collection for useful material, know explicitly on which ideas you’ve already settled. What is your premise?</p>
+
+<p>Only combine ideas that are really compatible and keep it simple: Multiple ideas can quickly pull a song into different directions, which means the song would lack a clear direction in which it wants to be developed, and that’s where you’d fall back into paralysis.</p>
+
+<p>Don’t be afraid to repeat yourself either: You may employ slight variations of the same idea in different songs. What’s important is that the material or idea you add to your premise articulates that premise even clearer instead of watering it down.</p>
+
+<h3 id="step-7-trust">Step 7: Trust</h3>
+
+<p>A hallmark of professionalism is making decisions and then sticking to them. Indecisiveness, doubt and overthinking are for amateurs.</p>
+
+<p>So when starting a new idea, try your best to push through to a demo of a complete consistent song that manifests one clear vision.</p>
+
+<p>But if you can’t get there, there’s a reason for it and you must delete the idea! No need to get attached to something even if you’ve invested days into it. Start fresh next time, you’ll learn quicker this way.</p>
+
+<p>Only decisions are progress. By trusting yourself to make decisions, you not only stop accumulating half baked snippets that are full of question marks, you also boost your output.</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[Drowning in musical ideas? Here's a strategy to leverage your material while staying inspired. It applies to all creative domains.]]></summary></entry><entry><title type="html">The Web Page for the Londonreal TV App Is Online</title><link href="https://www.flowtoolz.com/2016/09/28/londonreal-app-new-website.html" rel="alternate" type="text/html" title="The Web Page for the Londonreal TV App Is Online" /><published>2016-09-28T00:00:00+02:00</published><updated>2016-09-28T00:00:00+02:00</updated><id>https://www.flowtoolz.com/2016/09/28/londonreal-app-new-website</id><content type="html" xml:base="https://www.flowtoolz.com/2016/09/28/londonreal-app-new-website.html"><![CDATA[<p>
+    <img src="/blog-images/londonrealapp/11/poster.jpg" width="100%" class="ft-shadow">
+</p>
+
+<p>
+    Just a quick announcement: I'm happy to release this new page, presenting the Londonreal TV App that I created: <a href='/londonrealapp/' target='blank'>www.flowtoolz.com/londonrealapp</a>.
+</p>
+
+<p>
+    A year after I started this project, it's finally coming full circle. Exciting times!
+</p>]]></content><author><name>Sebastian Fichtner</name></author><summary type="html"><![CDATA[Just a quick announcement: I'm happy to release this new page, presenting the Londonreal TV App that I created: www.flowtoolz.com/londonrealapp]]></summary></entry></feed>

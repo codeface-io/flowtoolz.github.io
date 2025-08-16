@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+   <!-- General HTML stuff -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!-- Ointerest Verification -->
+   <meta name="p:domain_verify" content="f3b457d60e2bc853195951df92344b7f"/>
+   
+   <!-- Site Icon -->
+   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon/apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon/favicon-32x32.png">
+   <link rel="manifest" href="/assets/icon/site.webmanifest">
+   <link rel="mask-icon" href="/assets/icon/safari-pinned-tab.svg" color="#000000">
+   <meta name="msapplication-TileColor" content="#000000">
+   <meta name="theme-color" content="#ffffff">
+
+   <!-- CSS -->
+   <link rel='stylesheet' href='/assets/foundation-6/css/foundation.css'>
+   <link rel="stylesheet" href='/assets/flowtoolz.css'>
+
+   <!-- SEO --><!-- Basics (computed with Jekyll) -->
+
+<title>Flowtoolz &#187; 30 Reasons Why I Avoid Xcode's Interface Builder</title>
+
+
+<link rel="canonical" href="https://www.flowtoolz.com/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder.html">
+<meta name='author' content='Sebastian Fichtner'/>
+<meta name='description' content='The road to complexity hell is plastered with well intended technologies. And so the promises of the Interface Builder are an illusion.'/>
+<meta name='keywords' content='Apple, Xcode, interface builder, Swift, auto layout, uiview, uiviewcontroller, storyboard, xib, IBOutlet, iOS, macOS, SwiftUI, UIKit, AppKit, UI, user interface, design, programming, programmatic, mobile apps, software architecture'/>
+
+
+   <link rel="image_src" href="https://www.flowtoolz.com/blog-images/software-development/xcode-interface-builder/no-apple-xcode-interface-builder.png">
+
+
+
+
+
+
+<!-- Open Graph properties (hard coded) -->
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:latitude" content="47.649606">
+<meta property="og:longitude" content="9.164385">
+
+<!-- Open Graph properties (computed with Jekyll) -->
+<meta property="og:title" content="30 Reasons Why I Avoid Xcode's Interface Builder" />
+<meta property="og:site_name" content="Flowtoolz" />
+<meta property="og:url" content="https://www.flowtoolz.com/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder.html" />
+<meta property="og:description"
+   content="The road to complexity hell is plastered with well intended technologies. And so the promises of the Interface Builder are an illusion." />
+
+
+   <meta property="og:image" content="https://www.flowtoolz.com/blog-images/software-development/xcode-interface-builder/no-apple-xcode-interface-builder.png" />
+   <meta property="og:image:type" content="image/jpeg" />
+
+
+
+   <meta property="og:type" content="article" />
+   <meta property="article:published_time" content="2019-09-27T00:00:00+02:00" />
+
+<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.flowtoolz.com/feed.xml" title="Flowtoolz" /><!-- Google Analytics --></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">
+      <img src="/assets/logo.jpg" width="44px">
+      Flowtoolz
+    </a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Blog</a><a class="page-link" href="/service/">Service</a><a class="page-link" href="/more/">More</a><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main aria-label="Content">
+         <article class="wrapper h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+
+   <header class="post-header">
+       <h1 class="p-name" itemprop="name headline" style="margin-bottom:0px">
+      30 Reasons Why I Avoid Xcode&#39;s Interface Builder
+   </h1>
+   <p class="post-meta">
+      <time class="dt-published"
+         datetime="2019-09-27T00:00:00+02:00"
+         itemprop="datePublished">
+         Sep 27, 2019
+      </time>
+      •
+      <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+         <span class="p-author h-card" itemprop="name">
+            Sebastian Fichtner
+         </span>
+      </span>
+   </p>
+   </header>
+
+   <div class="e-content fl-blog-post-content" itemprop="articleBody">
+      <p><img style="margin-left:auto;margin-right:auto;display:block;" src="/blog-images/software-development/xcode-interface-builder/no-apple-xcode-interface-builder.png" title="30 Reasons Why I Avoid Xcode's Interface Builder" alt="30 Reasons Why I Avoid Xcode's Interface Builder. Apple, Xcode, interface builder, Swift, auto layout, uiview, uiviewcontroller, storyboard, xib, IBOutlet, iOS, macOS, SwiftUI, UIKit, AppKit, UI, user interface, design, programming, programmatic, mobile apps, software architecture" /></p>
+
+<p>The road to complexity hell is plastered with well intended technologies. And after I’ve had to deal with Apple Xcode’s Interface Builder in every big client project, I’m convinced its promises are an illusion.</p>
+
+<p>So why am I such a hater on the Interface Builder? What I rather wonder is: Why would any <strong>professional</strong> use it? While the IB <em>may</em> help to build simple rough prototypes (I’m not even sure about that), I can’t regard it anymore as an option for professional apps.</p>
+
+<h2 id="five-violated-principles">Five Violated Principles</h2>
+
+<p>This article ends on a list of 25 issues that I experienced with the Interface Builder across many projects. However, those issues are really just arbitrary symptoms of an underlying problem: The Interface Builder violates fundamental <a href="https://www.flowtoolz.com/2019/08/24/architecture-is-principled-software-development.html">principles of software architecture</a>. We could certainly find even more symptoms because going against basic principles manifests in countless unpredictable ways.</p>
+
+<p>So what principles would we violate using the IB? Here are five:</p>
+
+<ol>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Package_principles#Principles_of_package_cohesion">Principles of Cohesion</a>:</strong> We violate the principle of maximum cohesion as we spread the concern of a single view over two different artifacts. This divide goes through almost all screens and views in a typical commercial project, causing countless friction points.</p>
+
+    <p>The issue gets amplified by the fact that every one of those friction points must translate between two different representation standards: One is <a href="https://forums.swift.org">Swift</a>, the other is an IB specific XML format.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Acyclic_dependencies_principle">Acyclic Dependency Principle</a>:</strong> IB files reference UIView- and UIViewController subclasses which, in turn, reference IB files via outlets and name identifiers for XIBs, segues and storyboards.</p>
+
+    <p>While this is not good, it is mostly a consequence of violating the SRP.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">Dependency Inversion Principle</a>:</strong> Specifics depend on abstractions. Yet IB files entangle abstract screen flow and view descriptions with highly specific formats and tools. What is logically an independent “view model” technically becomes dependent onto system specifics.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://www.flowtoolz.com/2019/08/25/code-represents-customer-value-and-technology.html">Effective artifacts tell the truth</a>:</strong> We could interpret all the above principles as aspects of this more fundamental assessment.</p>
+
+    <p>For example, the <a href="https://www.flowtoolz.com/2019/08/26/code-structure-is-determined-by-dependencies.html">dependencies</a> between Swift types and IB artifacts are not implied by the intended user interface. Nor do they follow from the required technology, considering that the IB’s abstractions are hardly a thin veneer over the respective UI framework (UIKit, AppKit). So those dependencies structure the project in a way that <em>is untrue to its supposed meaning</em>.</p>
+
+    <p>Also, user interfaces are hierarchically composed, so the project’s artifacts representing the UI should reflect that structure. IB files can indeed do that, yet they store everything in a format that is only transparent to the IB itself and opaque in all other contexts. This means, in many contexts (most notably with git), IB artifacts <em>don’t tell the truth about UI structure</em>.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://en.wikipedia.org/wiki/Binomial_coefficient">Complexity increases quadratically</a>:</strong> The number of potential pairwise friction points between <code class="highlighter-rouge">N</code> moving parts is <code class="highlighter-rouge">(N^2 - N) / 2</code>. While 5 technologies can have 10 friction points, 6 technologies can already have 15:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/complexity-exploding-with-tech-factors.jpg" alt="storyboard_compilation_error" /></p>
+
+    <p>By nature, we think linearly, but complexity grows much faster, so we constantly underestimate it. We let technologies and dependencies creep in because each by itself is theoretically useful. Yet overall, they make the complexity of our system explode.</p>
+
+    <p>This principle is by no means limited to software systems, yet it is relevant here. We should be super reluctant to add unnecessary technologies to our tech stack, even if they promise to be worth it.</p>
+  </li>
+</ol>
+
+<h2 id="25-symptoms">25 Symptoms</h2>
+
+<p>So here is what you get, “building” UIs with Interface Builder:</p>
+
+<ol>
+  <li>
+    <p>Because you have to draw a line somewhere between visual editing and coding, and because many views can’t be represented in IB files (due to custom drawing, dynamic layouts, views from external frameworks, lazyness etc.), IB files <strong>virtually never</strong> provide an idea of how screens will actually look, which defeats much of the IB’s purpose.</p>
+
+    <p>In practice, most storyboards look something like this:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/storyboard.jpg" alt="storyboard_compilation_error" /></p>
+  </li>
+  <li>
+    <p>The IB is slow. Opening and loading a storyboard usually has a significant delay.</p>
+  </li>
+  <li>
+    <p>The IB does not make it obvious where configurations deviate from defaults, i.e. where they have been manipulated by a developer.</p>
+  </li>
+  <li>
+    <p>Handleing complex interfaces through pointing, zooming, scrolling and selecting, intertwined with keyboard input is actually pretty fucking slow.</p>
+  </li>
+  <li>
+    <p>Algorithmic (dynamic/generic) layouts are impossible. However, often the mere existence of a view is determined at runtime, or layouts depend on data.</p>
+  </li>
+  <li>
+    <p>What constraints are actually applied is less explicit, in particular in the context of the code.</p>
+  </li>
+  <li>
+    <p>IB files create a mess with collaboration and version control systems like git.</p>
+  </li>
+  <li>
+    <p>IB files mess up the architecture I: They entangle the logical definition of the interface (which constitutes something like a “view model”) with highly system specific file formats.</p>
+  </li>
+  <li>
+    <p>IB files mess up the architecture II: They entangle the logical definition of screen flow (high level navigation) with highly system specific file formats.</p>
+  </li>
+  <li>
+    <p>Setting very specific constraints with multipliers etc. and also debugging layout issues are a nightmare with the IB.</p>
+  </li>
+  <li>
+    <p>Coding animations often requires to access or even replace constraints. Good luck doing that when using the IB!</p>
+  </li>
+  <li>
+    <p>There are more initializers and functions like <code class="highlighter-rouge">prepare(for segue: ...)</code> to worry about as well as the general interoperation between code and IB files.</p>
+  </li>
+  <li>
+    <p>Communicating with views requires to create outlets, which is actually quite cumbersome.</p>
+  </li>
+  <li>
+    <p>Your app will be harder to port to other platforms, even within the Apple universe.</p>
+  </li>
+  <li>
+    <p>It is more cumbersome to turn views into reusable custom views when they live in IB files. This also leads to massive view controllers.</p>
+  </li>
+  <li>
+    <p>You’ll encounter a bunch of issues when trying to package IB files into frameworks and Cocoapods.</p>
+  </li>
+  <li>
+    <p>Subviews are optional. Either you unwrap them everytime or you make them implicitly unwrapped. The latter option is common practice but can (and did in client projects) lead to crashes.</p>
+  </li>
+  <li>
+    <p>It is impossible to pass parameters to custom designated initializers of your views and view controllers. This stark limitation can compromise clean design and architecture.</p>
+  </li>
+  <li>
+    <p>The Refactor-Rename function in Xcode will not always rename all outlet connections in IB files, leading to crashes. You’ll need to reconnect renamed outlets by hand.</p>
+  </li>
+  <li>
+    <p>You’ll deal with a whole new type of “compilation” error, which is also opaque and hard to debug:</p>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/storyboard_compilation_error.png" alt="storyboard_compilation_error" /></p>
+  </li>
+  <li>Designing custom view classes through the IB is cumbersome and requires to use IB “designables”. Plus:
+    <ul>
+      <li>IB must recompile your whole project in order to display these designables, which makes the IB performance problems even worse.</li>
+      <li><code class="highlighter-rouge">@IB_Designable</code> is not well documented by Apple.</li>
+      <li><code class="highlighter-rouge">@IB_Designable</code> rendering causes its own type of build errors:</li>
+    </ul>
+
+    <p><img src="/blog-images/software-development/xcode-interface-builder/ib_designable_rendering_error.png" alt="designable_rendering_error" /></p>
+  </li>
+  <li>
+    <p>IB will not recognize when you move a referenced class to another module (framework, cocoapod etc.). If you forget to adapt the module manually in IB, you’ll be surprised by chrashes.</p>
+  </li>
+  <li>
+    <p>It’s impossible to define insets, offsets, multipliers, sizes, colors, fonts etc. in one place as part of a style. Much less can you compute them dynamically, for instance to depend on screen size, device type or user preference.</p>
+  </li>
+  <li>
+    <p>Using the IB makes code harder to debug. For instance, setting a breakpoint in a view’s or view controller’s initializer won’t tell you what triggered the creation of that object. Also, you can’t search for a term like <code class="highlighter-rouge">MyView(</code> in your project to find all uses/clients of that view class.</p>
+  </li>
+  <li>Using the IB will make it harder to migrate to more modern code-based and declarative technologies like SwiftUI.</li>
+</ol>
+
+<h2 id="one-conclusion">One Conclusion</h2>
+
+<p>Looking at pinciple problems and some of their concrete symptoms, using the traditional Interface Builder should be considered insane – in particular in light of how easy programmatic layout with Swift has become, with <a href="https://developer.apple.com/documentation/uikit/nslayoutanchor">layout anchors</a>, <a href="https://developer.apple.com/documentation/uikit/uiview/2891102-safearealayoutguide">safe areas</a>, frameworks like <a href="https://github.com/flowtoolz/GetLaid">GetLaid</a> and, of course, <a href="https://developer.apple.com/documentation/swiftui/">SwiftUI</a>.</p>
+
+   </div><a class="u-url" href="/2019/09/27/the-reasons-for-why-i-hate-xcode-interface-builder.html" hidden></a>
+
+</article>
+
+      </main><footer class="h-card">
+
+<data class="u-url" href="/"></data>
+
+<div class="wrapper">
+   <p>
+<a href="https://medium.com/@flowtoolz">
+    <img src="/assets/simpleicons.org/medium.svg" />
+</a>
+
+<a href="https://www.linkedin.com/in/flowtoolz">
+   <img class="needs-left-margin" src="/assets/simpleicons.org/linkedin.svg" />
+</a>
+
+<a href="https://www.xing.com/profile/Sebastian_Fichtner">
+   <img class="needs-left-margin" src="/assets/simpleicons.org/xing.svg" />
+</a>
+
+<!--<a href="https://www.youtube.com/channel/UCqL_LbGNuKUuAKVlY9y7Eug">-->
+<!--   <img class="needs-left-margin" src="/assets/simpleicons.org/youtube.svg" />-->
+<!--</a>-->
+<!---->
+<!--<a href="https://www.instagram.com/flowtoolz">-->
+<!--    <img class="needs-left-margin" src="/assets/simpleicons.org/instagram.svg" />-->
+<!--</a>-->
+<!---->
+<!--<a href="https://www.facebook.com/flowtoolz">-->
+<!--    <img class="needs-left-margin" src="/assets/simpleicons.org/facebook.svg" />-->
+<!--</a>-->
+
+<a href="https://www.goodreads.com/flowtoolz">
+    <img class="needs-left-margin" src="/assets/simpleicons.org/goodreads.svg" />
+</a>
+
+<!--<a href="https://www.pinterest.ch/flowtoolz/">-->
+<!--    <img class="needs-left-margin" src="/assets/other-icons/pinterest.svg" />-->
+<!--</a>-->
+<!---->
+<!--<a href="https://twitter.com/flowtoolz_com">-->
+<!--    <img class="needs-left-margin" src="/assets/other-icons/twitter.svg" />-->
+<!--</a>-->
+
+<a href="https://github.com/flowtoolz">
+    <img class="needs-left-margin" src="/assets/simpleicons.org/github.svg" />
+</a>
+
+<a class="u-email" href="mailto:contact@flowtoolz.com">
+    <img class="needs-left-margin" src="/assets/simpleicons.org/email.svg" />
+</a>
+
+<a href="/feed.xml">
+   <img class="needs-left-margin" src="/assets/simpleicons.org/rss.svg" />
+</a>
+</p>
+   <p style="margin-top:5px">
+      <i>Beautiful <nobr>Creativity Tools</nobr> for <nobr>Working in Flow</nobr><br><nobr>Focus. Play. Create.</nobr></i>
+   </p>
+   <br>
+   <p>
+       <a style="color:rgb(175,175,175)" href="/imprint/index.html">
+           Imprint
+       </a>
+   </p>
+</div>
+
+</footer>
+<script src='/assets/foundation-6/js/vendor/jquery.js'></script>
+<script src='/assets/foundation-6/js/vendor/what-input.js'></script>
+<script src='/assets/foundation-6/js/vendor/foundation.min.js'></script>
+<script> $(document).foundation(); </script>
+</body>
+
+</html>
